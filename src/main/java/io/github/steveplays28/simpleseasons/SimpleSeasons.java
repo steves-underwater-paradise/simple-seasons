@@ -31,8 +31,8 @@ public class SimpleSeasons implements ModInitializer {
 			Seasons.SUMMER.ordinal(), SUMMER_COLOR_ADDITION, Seasons.FALL.ordinal(), FALL_COLOR_ADDITION, Seasons.WINTER.ordinal(),
 			WINTER_COLOR_ADDITION
 	);
-	public static final long TIME_PER_DAY = 10;
-	public static final long TIME_PER_SEASON_CHANGE = TIME_PER_DAY * 30;
+	public static final long TIME_PER_DAY = 2;
+	public static final long TIME_PER_SEASON_CHANGE = TIME_PER_DAY * 30 * 3;
 
 	public enum Seasons {
 		SPRING, SUMMER, FALL, WINTER
@@ -43,8 +43,9 @@ public class SimpleSeasons implements ModInitializer {
 		LOGGER.info("Initializing {}!", MOD_NAME);
 
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
+			var overworld = server.getOverworld();
 			var simpleSeasonsState = SimpleSeasonsState.getServerState(server);
-			var currentTime = server.getOverworld().getTime();
+			var currentTime = overworld.getTime();
 
 			if (currentTime - simpleSeasonsState.lastSeasonChangeTime >= TIME_PER_SEASON_CHANGE) {
 				simpleSeasonsState.lastSeasonChangeTime = currentTime;
@@ -54,6 +55,11 @@ public class SimpleSeasons implements ModInitializer {
 					simpleSeasonsState.season += 1;
 				}
 				simpleSeasonsState.markDirty();
+
+				// Stop raining/snowing if it's spring or summer, and start raining/snowing if it's fall or winter
+				var worldProperties = overworld.getLevelProperties();
+				worldProperties.setRaining(
+						simpleSeasonsState.season == Seasons.FALL.ordinal() || simpleSeasonsState.season == Seasons.WINTER.ordinal());
 
 				// Send Simple Seasons state packet to all players
 				for (var player : server.getPlayerManager().getPlayerList()) {

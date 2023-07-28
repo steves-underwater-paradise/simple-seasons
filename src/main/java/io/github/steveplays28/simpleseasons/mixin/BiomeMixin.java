@@ -1,6 +1,8 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
+import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.util.Color;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import org.spongepowered.asm.mixin.Final;
@@ -28,5 +30,17 @@ public abstract class BiomeMixin {
 		foliageColor = foliageColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
 
 		cir.setReturnValue(foliageColor.toInt());
+	}
+
+	@Inject(method = "getPrecipitation", at = @At(value = "HEAD"), cancellable = true)
+	public void getPrecipitationInject(CallbackInfoReturnable<Biome.Precipitation> cir) {
+		if (season == SimpleSeasons.Seasons.WINTER.ordinal()) {
+			cir.setReturnValue(Biome.Precipitation.SNOW);
+		}
+	}
+
+	@Inject(method = "doesNotSnow", at = @At(value = "HEAD"), cancellable = true)
+	public void doesNotSnowInject(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+		cir.setReturnValue(season == SimpleSeasons.Seasons.WINTER.ordinal());
 	}
 }

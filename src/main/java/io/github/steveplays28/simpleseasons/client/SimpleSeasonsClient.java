@@ -11,9 +11,9 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ClientPlayNetworking.registerGlobalReceiver(SEASON_PACKET_CHANNEL, (client, handler, buf, responseSender) -> {
-			season = buf.readInt();
+			if (client.world == null || client.player == null) return;
 
-			client.execute(client.worldRenderer::reload);
+			season = buf.readInt();
 		});
 	}
 }
