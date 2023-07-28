@@ -1,5 +1,7 @@
 package io.github.steveplays28.simpleseasons.util;
 
+import java.text.MessageFormat;
+
 import static io.github.steveplays28.simpleseasons.util.MathUtil.clamp;
 
 /**
@@ -28,6 +30,11 @@ public class Color {
 		blue = color.blue;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Color(%s, %s, %s)", red, green, blue);
+	}
+
 	public int toInt() {
 		int hex = red;
 		hex = (hex << 8) + green;
@@ -37,7 +44,7 @@ public class Color {
 	}
 
 	public Color multiply(Color color) {
-		var newColor = new Color(color);
+		var newColor = new Color(this);
 
 		newColor.red = clamp(newColor.red * color.red, 0, 255);
 		newColor.green = clamp(newColor.green * color.green, 0, 255);
@@ -47,7 +54,7 @@ public class Color {
 	}
 
 	public Color add(Color color) {
-		var newColor = new Color(color);
+		var newColor = new Color(this);
 
 		newColor.red = clamp(newColor.red + color.red, 0, 255);
 		newColor.green = clamp(newColor.green + color.green, 0, 255);
@@ -57,7 +64,7 @@ public class Color {
 	}
 
 	public Color subtract(Color color) {
-		var newColor = new Color(color);
+		var newColor = new Color(this);
 
 		newColor.red = clamp(newColor.red - color.red, 0, 255);
 		newColor.green = clamp(newColor.green - color.green, 0, 255);

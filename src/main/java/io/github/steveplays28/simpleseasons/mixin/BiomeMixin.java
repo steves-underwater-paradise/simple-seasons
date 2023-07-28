@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static io.github.steveplays28.simpleseasons.SimpleSeasons.LOGGER;
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASONS_COLOR_ADDITIONS_MAP;
 import static io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient.season;
 
@@ -25,7 +26,9 @@ public abstract class BiomeMixin {
 	@Inject(method = "getFoliageColor", at = @At(value = "HEAD"), cancellable = true)
 	public void getFoliageColorInject(CallbackInfoReturnable<Integer> cir) {
 		var foliageColor = new Color(this.effects.getFoliageColor().orElseGet(this::getDefaultFoliageColor));
+//		LOGGER.info("before: {}", foliageColor);
 		foliageColor = foliageColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
+//		LOGGER.info("after: {}", foliageColor);
 
 		cir.setReturnValue(foliageColor.toInt());
 	}
