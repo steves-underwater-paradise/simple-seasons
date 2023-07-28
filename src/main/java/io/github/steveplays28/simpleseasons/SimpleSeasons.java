@@ -2,11 +2,13 @@ package io.github.steveplays28.simpleseasons;
 
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +27,12 @@ public class SimpleSeasons implements ModInitializer {
 	public static final Color FALL_COLOR_ADDITION = new Color(255 / 3, 0, 0);
 	public static final Color WINTER_COLOR_ADDITION = new Color(255 / 2, 255 / 2, 255 / 2);
 	// Seasons color map
-	public static final Map<Integer, Color> SEASONS_COLOR_MAP = Map.of(
-			Seasons.SPRING.ordinal(), SPRING_COLOR_ADDITION,
-			Seasons.SUMMER.ordinal(), SUMMER_COLOR_ADDITION,
-			Seasons.FALL.ordinal(), FALL_COLOR_ADDITION,
-			Seasons.WINTER.ordinal(), WINTER_COLOR_ADDITION
+	public static final Map<Integer, Color> SEASONS_COLOR_ADDITIONS_MAP = Map.of(Seasons.SPRING.ordinal(), SPRING_COLOR_ADDITION,
+			Seasons.SUMMER.ordinal(), SUMMER_COLOR_ADDITION, Seasons.FALL.ordinal(), FALL_COLOR_ADDITION, Seasons.WINTER.ordinal(),
+			WINTER_COLOR_ADDITION
 	);
+	public static final long TIME_PER_DAY = 10;
+	public static final long TIME_PER_SEASON_CHANGE = TIME_PER_DAY * 30;
 
 	public enum Seasons {
 		SPRING, SUMMER, FALL, WINTER
@@ -40,23 +42,29 @@ public class SimpleSeasons implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("Initializing {}!", MOD_NAME);
 
-		// Set season to winter
-		// TODO: Replace with a season cycle
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-			SimpleSeasonsState simpleSeasonsState = SimpleSeasonsState.getServerState(server);
+		ServerTickEvents.END_SERVER_TICK.register(server -> {
+			var simpleSeasonsState = SimpleSeasonsState.getServerState(server);
+			var currentTime = server.getOverworld().getTime();
 
-			simpleSeasonsState.season = Seasons.WINTER.ordinal();
-			simpleSeasonsState.markDirty();
+			if (currentTime - simpleSeasonsState.lastSeasonChangeTime >= TIME_PER_SEASON_CHANGE) {
+				simpleSeasonsState.lastSeasonChangeTime = currentTime;
+				if (simpleSeasonsState.season >= 3) {
+					simpleSeasonsState.season = 0;
+				} else {
+					simpleSeasonsState.season += 1;
+				}
+				simpleSeasonsState.markDirty();
+
+				// Send Simple Seasons state packet to all players
+				for (var player : server.getPlayerManager().getPlayerList()) {
+					sendSimpleSeasonsStatePacket(server, player);
+				}
+
+				LOGGER.info("Set season to {}.", simpleSeasonsState.season);
+			}
 		});
 
-
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			SimpleSeasonsState simpleSeasonsState = SimpleSeasonsState.getServerState(server);
-			var simpleSeasonsStatePacket = createSimpleSeasonsStatePacket(simpleSeasonsState);
-
-			// Send the packet to the connected player
-			ServerPlayNetworking.send(handler.player, SEASON_PACKET_CHANNEL, simpleSeasonsStatePacket);
-		});
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> sendSimpleSeasonsStatePacket(server, handler.player));
 	}
 
 	private PacketByteBuf createSimpleSeasonsStatePacket(SimpleSeasonsState simpleSeasonsState) {
@@ -64,5 +72,12 @@ public class SimpleSeasons implements ModInitializer {
 		packet.writeInt(simpleSeasonsState.season);
 
 		return packet;
+	}
+
+	private void sendSimpleSeasonsStatePacket(MinecraftServer server, ServerPlayerEntity player) {
+		var simpleSeasonsState = SimpleSeasonsState.getServerState(server);
+		var simpleSeasonsStatePacket = createSimpleSeasonsStatePacket(simpleSeasonsState);
+
+		ServerPlayNetworking.send(player, SEASON_PACKET_CHANNEL, simpleSeasonsStatePacket);
 	}
 }
