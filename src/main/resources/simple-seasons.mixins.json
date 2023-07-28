@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.steveplays28.simpleseasons.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BiomeMixin"
+  ],
+  "client": [
+    "BlockColorsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

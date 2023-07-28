@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "simple-seasons",
+  "version": "${version}",
+  "name": "simple-seasons",
+  "description": "Seasons, but there's no memory leak™",
+  "authors": [
+    "Steveplays28"
+  ],
+  "contact": {
+    "website": "https://steveplays28.github.io",
+    "repo": "https://github.com/Steveplays28/simple-seasons"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/simple-seasons/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient"
+    ],
+    "main": [
+      "io.github.steveplays28.simpleseasons.SimpleSeasons"
+    ]
+  },
+  "mixins": [
+    "simple-seasons.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
