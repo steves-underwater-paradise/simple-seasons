@@ -34,13 +34,18 @@ public abstract class BiomeMixin {
 
 	@Inject(method = "getPrecipitation", at = @At(value = "HEAD"), cancellable = true)
 	public void getPrecipitationInject(CallbackInfoReturnable<Biome.Precipitation> cir) {
+		var originalPrecipitation = cir.getReturnValue();
+		if (originalPrecipitation == Biome.Precipitation.NONE) return;
+
 		if (season == SimpleSeasons.Seasons.WINTER.ordinal()) {
 			cir.setReturnValue(Biome.Precipitation.SNOW);
+		} else {
+			cir.setReturnValue(Biome.Precipitation.RAIN);
 		}
 	}
 
 	@Inject(method = "doesNotSnow", at = @At(value = "HEAD"), cancellable = true)
 	public void doesNotSnowInject(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-		cir.setReturnValue(season == SimpleSeasons.Seasons.WINTER.ordinal());
+		cir.setReturnValue(season != SimpleSeasons.Seasons.WINTER.ordinal());
 	}
 }
