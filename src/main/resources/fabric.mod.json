@@ -3,7 +3,7 @@
   "id": "simple-seasons",
   "version": "${version}",
   "name": "simple-seasons",
-  "description": "Seasons, but there's no memory leak™",
+  "description": "Seasons, but they don't cause a memory leak™",
   "authors": [
     "Steveplays28"
   ],
