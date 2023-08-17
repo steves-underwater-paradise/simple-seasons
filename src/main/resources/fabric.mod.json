@@ -25,6 +25,7 @@
   "mixins": [
     "simple-seasons.mixins.json"
   ],
+  "accessWidener" : "simple-seasons.accesswidener",
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",

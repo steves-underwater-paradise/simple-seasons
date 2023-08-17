@@ -19,6 +19,12 @@ repositories {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
     }
+
+    // Fabric Permissions API
+    maven {
+        name = "SonaType"
+        url = "https://oss.sonatype.org/content/repositories/snapshots"
+    }
 }
 
 dependencies {
@@ -40,6 +46,9 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // Fabric Permissions API
+    include(modImplementation("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}"))
 }
 
 processResources {
@@ -100,4 +109,8 @@ publishing {
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
     }
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/simple-seasons.accesswidener")
 }
