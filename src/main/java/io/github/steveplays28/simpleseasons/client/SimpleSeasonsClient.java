@@ -41,7 +41,6 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 			for (int y = fromY; y < toY; y++) {
 				for (int z = fromZ; z < toZ; z++) {
 					world.worldRenderer.scheduleBlockRender(x, y, z);
-					world.markChunkRenderability(x, z);
 				}
 			}
 		}
