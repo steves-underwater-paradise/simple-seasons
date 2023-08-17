@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "simple-seasons",
   "version": "${version}",
-  "name": "simple-seasons",
+  "name": "Simple Seasons",
   "description": "Seasons, but they don't cause a memory leak™",
   "authors": [
     "Steveplays28"
@@ -12,7 +12,7 @@
     "repo": "https://github.com/Steveplays28/simple-seasons"
   },
   "license": "LGPL-3.0",
-  "icon": "assets/simple-seasons/icon.png",
+  "icon": "assets/simpleseasons/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
