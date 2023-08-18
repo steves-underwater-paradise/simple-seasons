@@ -41,7 +41,24 @@ public class SimpleSeasons implements ModInitializer {
 	public static final long TIME_PER_SEASON_CHANGE = TIME_PER_DAY * 30 * 3;
 
 	public enum Seasons {
-		SPRING, SUMMER, FALL, WINTER
+		SPRING, SUMMER, FALL, WINTER;
+
+		public final int value;
+
+		Seasons() {
+			this.value = ordinal();
+		}
+
+		public static String getName(int value) {
+			for (Seasons e : Seasons.values()) {
+				if (e.value == value) {
+					return e.name();
+				}
+			}
+
+			// Not found
+			return "season not found";
+		}
 	}
 
 	@Override
@@ -84,6 +101,11 @@ public class SimpleSeasons implements ModInitializer {
 				dispatcher.register(command);
 			}
 		});
+	}
+
+	public static int getSeason(MinecraftServer server) {
+		var simpleSeasonsState = SimpleSeasonsState.getServerState(server);
+		return simpleSeasonsState.season;
 	}
 
 	public static void setSeason(MinecraftServer server, int season) {
