@@ -9,6 +9,7 @@
     "SnowBlockMixin"
   ],
   "client": [
+    "BiomeColorsMixin",
     "BlockColorsMixin"
   ],
   "injectors": {

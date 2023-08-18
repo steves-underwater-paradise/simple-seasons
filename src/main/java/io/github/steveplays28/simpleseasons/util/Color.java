@@ -1,7 +1,5 @@
 package io.github.steveplays28.simpleseasons.util;
 
-import java.text.MessageFormat;
-
 import static io.github.steveplays28.simpleseasons.util.MathUtil.clamp;
 
 /**
@@ -69,6 +67,16 @@ public class Color {
 		newColor.red = clamp(newColor.red - color.red, 0, 255);
 		newColor.green = clamp(newColor.green - color.green, 0, 255);
 		newColor.blue = clamp(newColor.blue - color.blue, 0, 255);
+
+		return newColor;
+	}
+
+	public Color invert() {
+		var newColor = new Color(this);
+
+		newColor.red = clamp(255 - this.red, 0, 255);
+		newColor.green = clamp(255 - this.green, 0, 255);
+		newColor.blue = clamp(255 - this.blue, 0, 255);
 
 		return newColor;
 	}
