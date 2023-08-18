@@ -1,5 +1,4 @@
 accessWidener v1 named
 
-accessible class net/minecraft/client/render/WorldRenderer$ChunkInfo
-accessible class net/minecraft/client/render/WorldRenderer$RenderableChunks
 accessible field net/minecraft/client/world/ClientWorld worldRenderer Lnet/minecraft/client/render/WorldRenderer;
+accessible method net/minecraft/client/render/WorldRenderer scheduleChunkRender (IIIZ)V

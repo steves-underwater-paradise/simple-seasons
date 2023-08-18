@@ -4,11 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-
-import static io.github.steveplays28.simpleseasons.SimpleSeasons.LOGGER;
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASON_PACKET_CHANNEL;
 
 public class SimpleSeasonsClient implements ClientModInitializer {
@@ -35,10 +31,21 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 	}
 
 	private void scheduleChunkRenders(ClientWorld world, int fromX, int toX, int fromY, int toY, int fromZ, int toZ) {
+		int lastChunkPosX = Integer.MAX_VALUE;
+		int lastChunkPosY = Integer.MAX_VALUE;
+		int lastChunkPosZ = Integer.MAX_VALUE;
+
 		for (int x = fromX; x <= toX; x++) {
 			for (int y = fromY; y <= toY; y++) {
 				for (int z = fromZ; z <= toZ; z++) {
-					world.worldRenderer.scheduleBlockRender(x >> 4, y >> 4, z >> 4);
+					if (x == lastChunkPosX && y == lastChunkPosY && z == lastChunkPosZ) {
+						continue;
+					}
+
+					world.worldRenderer.scheduleChunkRender(x >> 4, y >> 4, z >> 4, true);
+					lastChunkPosX = x;
+					lastChunkPosY = y;
+					lastChunkPosZ = z;
 				}
 			}
 		}
