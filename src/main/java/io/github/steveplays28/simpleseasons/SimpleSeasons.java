@@ -1,6 +1,7 @@
 package io.github.steveplays28.simpleseasons;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import io.github.steveplays28.simpleseasons.api.BlockColorProviderRegistry;
 import io.github.steveplays28.simpleseasons.command.season.SetSeasonCommand;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.fabricmc.api.ModInitializer;
@@ -9,6 +10,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Blocks;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
@@ -101,6 +103,9 @@ public class SimpleSeasons implements ModInitializer {
 				dispatcher.register(command);
 			}
 		});
+
+		// Register vanilla block color providers using the API
+		registerVanillaBlockColorProviders();
 	}
 
 	public static int getSeason(MinecraftServer server) {
@@ -134,5 +139,13 @@ public class SimpleSeasons implements ModInitializer {
 		var simpleSeasonsStatePacket = createSimpleSeasonsStatePacket(simpleSeasonsState, initialLoad);
 
 		ServerPlayNetworking.send(player, SEASON_PACKET_CHANNEL, simpleSeasonsStatePacket);
+	}
+
+	private void registerVanillaBlockColorProviders() {
+		BlockColorProviderRegistry.registerBlocks(
+				List.of(
+						Blocks.AZALEA_LEAVES, Blocks.FLOWERING_AZALEA_LEAVES, Blocks.AZALEA, Blocks.FLOWERING_AZALEA, Blocks.SPORE_BLOSSOM,
+						Blocks.ATTACHED_MELON_STEM, Blocks.ATTACHED_PUMPKIN_STEM
+				));
 	}
 }
