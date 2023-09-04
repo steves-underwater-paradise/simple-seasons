@@ -43,7 +43,8 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 	private void registerVanillaBlockColorProviders() {
 		BlockColorProviderRegistry.registerBlocks(
 				List.of(Blocks.AZALEA_LEAVES, Blocks.FLOWERING_AZALEA_LEAVES, Blocks.AZALEA, Blocks.FLOWERING_AZALEA, Blocks.SPORE_BLOSSOM,
-						Blocks.ATTACHED_MELON_STEM, Blocks.ATTACHED_PUMPKIN_STEM, Blocks.WHEAT
+						Blocks.ATTACHED_MELON_STEM, Blocks.ATTACHED_PUMPKIN_STEM, Blocks.WHEAT, Blocks.ACACIA_SAPLING, Blocks.BIRCH_SAPLING,
+						Blocks.CHERRY_SAPLING, Blocks.DARK_OAK_SAPLING, Blocks.JUNGLE_SAPLING, Blocks.OAK_SAPLING, Blocks.SPRUCE_SAPLING
 				));
 	}
 
