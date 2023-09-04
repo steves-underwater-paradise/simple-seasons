@@ -1,12 +1,15 @@
 package io.github.steveplays28.simpleseasons.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASON_PACKET_CHANNEL;
 
+@Environment(EnvType.CLIENT)
 public class SimpleSeasonsClient implements ClientModInitializer {
 	public static int season;
 
