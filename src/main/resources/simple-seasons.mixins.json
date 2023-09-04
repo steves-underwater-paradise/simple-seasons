@@ -10,7 +10,8 @@
   ],
   "client": [
     "BiomeColorsMixin",
-    "BlockColorsMixin"
+    "BlockColorsMixin",
+    "accessor.ChunkRendererRegionAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

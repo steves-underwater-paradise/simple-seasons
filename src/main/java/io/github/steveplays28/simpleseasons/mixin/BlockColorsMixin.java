@@ -1,6 +1,7 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
 import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
+import io.github.steveplays28.simpleseasons.mixin.accessor.ChunkRendererRegionAccessor;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -10,6 +11,8 @@ import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.color.world.GrassColors;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASONS_COLOR_ADDITIONS_MAP;
+import static io.github.steveplays28.simpleseasons.SimpleSeasons.*;
 import static io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient.season;
 
 @Environment(EnvType.CLIENT)
@@ -47,6 +50,15 @@ public class BlockColorsMixin {
 			grassColor = new Color(GrassColors.getDefaultColor());
 		} else {
 			grassColor = new Color(BiomeColors.getGrassColor(world, pos));
+
+			if (world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
+				var clientWorld = (ClientWorld) chunkRendererRegion.getWorld();
+
+				if (clientWorld.getBiome(pos).matchesId(new Identifier(MINECRAFT_MOD_ID, "savanna"))) {
+					grassColor = grassColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
+					return grassColor;
+				}
+			}
 		}
 
 		grassColor = grassColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
