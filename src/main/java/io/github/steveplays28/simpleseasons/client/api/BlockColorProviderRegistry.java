@@ -1,5 +1,7 @@
-package io.github.steveplays28.simpleseasons.api;
+package io.github.steveplays28.simpleseasons.client.api;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
  * An endpoint for registering block color providers. Use this to make your block's colors change dynamically depending on the season.
  * Your block's texture is required to be grayscale and your block's model is required to use `tintindex: 0`, or set leaves as the parent, for this feature to work.
  */
+@Environment(EnvType.CLIENT)
 public class BlockColorProviderRegistry {
 	private static final List<Block> registeredBlocks = new ArrayList<>();
 

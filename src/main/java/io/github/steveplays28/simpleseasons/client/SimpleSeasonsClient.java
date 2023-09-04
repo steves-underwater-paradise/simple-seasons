@@ -1,11 +1,15 @@
 package io.github.steveplays28.simpleseasons.client;
 
+import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
+
+import java.util.List;
 
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASON_PACKET_CHANNEL;
 
@@ -15,6 +19,9 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		// Register vanilla block color providers using the API
+		registerVanillaBlockColorProviders();
+
 		ClientPlayNetworking.registerGlobalReceiver(SEASON_PACKET_CHANNEL, (client, handler, buf, responseSender) -> {
 			if (client.world == null || client.player == null) return;
 
@@ -31,6 +38,13 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 					-viewDistanceBlocks, viewDistanceBlocks
 			);
 		});
+	}
+
+	private void registerVanillaBlockColorProviders() {
+		BlockColorProviderRegistry.registerBlocks(
+				List.of(Blocks.AZALEA_LEAVES, Blocks.FLOWERING_AZALEA_LEAVES, Blocks.AZALEA, Blocks.FLOWERING_AZALEA, Blocks.SPORE_BLOSSOM,
+						Blocks.ATTACHED_MELON_STEM, Blocks.ATTACHED_PUMPKIN_STEM, Blocks.WHEAT
+				));
 	}
 
 	private void scheduleChunkRenders(ClientWorld world, int fromX, int toX, int fromY, int toY, int fromZ, int toZ) {

@@ -1,7 +1,9 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
-import io.github.steveplays28.simpleseasons.api.BlockColorProviderRegistry;
+import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
 import io.github.steveplays28.simpleseasons.util.Color;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.color.block.BlockColors;
@@ -20,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASONS_COLOR_ADDITIONS_MAP;
 import static io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient.season;
 
+@Environment(EnvType.CLIENT)
 @Mixin(BlockColors.class)
 public class BlockColorsMixin {
 	@Unique
