@@ -1,16 +1,20 @@
 package io.github.steveplays28.simpleseasons.client;
 
 import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
+import io.github.steveplays28.simpleseasons.client.model.SeasonClampedModelPredicateProvider;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
+import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASON_PACKET_CHANNEL;
 
 @Environment(EnvType.CLIENT)
@@ -21,6 +25,9 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		// Register vanilla block color providers using the API
 		registerVanillaBlockColorProviders();
+
+		// Register season model predicate provider
+		ModelPredicateProviderRegistry.register(new Identifier(MOD_ID, "season"), new SeasonClampedModelPredicateProvider());
 
 		ClientPlayNetworking.registerGlobalReceiver(SEASON_PACKET_CHANNEL, (client, handler, buf, responseSender) -> {
 			if (client.world == null || client.player == null) return;
