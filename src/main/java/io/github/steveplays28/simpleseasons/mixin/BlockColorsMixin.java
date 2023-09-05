@@ -1,5 +1,6 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
+import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
 import io.github.steveplays28.simpleseasons.mixin.accessor.ChunkRendererRegionAccessor;
 import io.github.steveplays28.simpleseasons.util.Color;
@@ -36,6 +37,17 @@ public class BlockColorsMixin {
 			foliageColor = new Color(FoliageColors.getDefaultColor());
 		} else {
 			foliageColor = new Color(BiomeColors.getFoliageColor(world, pos));
+
+			if (world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
+				var clientWorld = (ClientWorld) chunkRendererRegion.getWorld();
+				var biome = clientWorld.getBiome(pos).value();
+				var biomeWeather = biome.weather;
+
+				if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
+					foliageColor = foliageColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
+					return foliageColor;
+				}
+			}
 		}
 
 		foliageColor = foliageColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
@@ -53,8 +65,10 @@ public class BlockColorsMixin {
 
 			if (world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
 				var clientWorld = (ClientWorld) chunkRendererRegion.getWorld();
+				var biome = clientWorld.getBiome(pos).value();
+				var biomeWeather = biome.weather;
 
-				if (clientWorld.getBiome(pos).matchesId(new Identifier(MINECRAFT_MOD_ID, "savanna"))) {
+				if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
 					grassColor = grassColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
 					return grassColor;
 				}
@@ -77,16 +91,40 @@ public class BlockColorsMixin {
 	@Inject(method = "method_1695", at = @At(value = "HEAD"), cancellable = true)
 	private static void spruceLeavesColorInject(BlockState state, BlockRenderView world, BlockPos pos, int tintIndex, CallbackInfoReturnable<Integer> cir) {
 		var spruceLeavesColor = new Color(FoliageColors.getSpruceColor());
-		spruceLeavesColor = spruceLeavesColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
 
+		if (world != null && pos != null && world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
+			var clientWorld = (ClientWorld) chunkRendererRegion.getWorld();
+			var biome = clientWorld.getBiome(pos).value();
+			var biomeWeather = biome.weather;
+
+			if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
+				spruceLeavesColor = spruceLeavesColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
+				cir.setReturnValue(spruceLeavesColor.toInt());
+				return;
+			}
+		}
+
+		spruceLeavesColor = spruceLeavesColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
 		cir.setReturnValue(spruceLeavesColor.toInt());
 	}
 
 	@Inject(method = "method_1687", at = @At(value = "HEAD"), cancellable = true)
 	private static void birchLeavesColorInject(BlockState state, BlockRenderView world, BlockPos pos, int tintIndex, CallbackInfoReturnable<Integer> cir) {
 		var birchLeavesColor = new Color(FoliageColors.getBirchColor());
-		birchLeavesColor = birchLeavesColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
 
+		if (world != null && pos != null && world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
+			var clientWorld = (ClientWorld) chunkRendererRegion.getWorld();
+			var biome = clientWorld.getBiome(pos).value();
+			var biomeWeather = biome.weather;
+
+			if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
+				birchLeavesColor = birchLeavesColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
+				cir.setReturnValue(birchLeavesColor.toInt());
+				return;
+			}
+		}
+
+		birchLeavesColor = birchLeavesColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
 		cir.setReturnValue(birchLeavesColor.toInt());
 	}
 
