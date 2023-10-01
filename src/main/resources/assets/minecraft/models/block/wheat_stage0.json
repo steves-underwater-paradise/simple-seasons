@@ -1,0 +1,7 @@
+{
+  "parent": "simpleseasons:block/crop_season_overlay",
+  "textures": {
+    "crop": "minecraft:block/wheat_stage0",
+    "season_overlay": "simpleseasons:block/wheat_stage0_season_overlay"
+  }
+}
