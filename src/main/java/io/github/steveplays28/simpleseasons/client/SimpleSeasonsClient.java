@@ -7,17 +7,18 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.chunk.ChunkBuilder;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
-import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASON_PACKET_CHANNEL;
+import static io.github.steveplays28.simpleseasons.SimpleSeasons.*;
 
 @Environment(EnvType.CLIENT)
 public class SimpleSeasonsClient implements ClientModInitializer {
@@ -26,7 +27,7 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		// Register vanilla block color providers using the API
-		registerVanillaBlockColorProviders();
+		registerVanillaColorProviders();
 
 		// Register season model predicate provider
 		ModelPredicateProviderRegistry.register(new Identifier(MOD_ID, "season"), new SeasonClampedModelPredicateProvider());
@@ -43,12 +44,16 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 		});
 	}
 
-	private void registerVanillaBlockColorProviders() {
+	private void registerVanillaColorProviders() {
 		BlockColorProviderRegistry.registerBlocks(
 				List.of(Blocks.AZALEA_LEAVES, Blocks.FLOWERING_AZALEA_LEAVES, Blocks.AZALEA, Blocks.FLOWERING_AZALEA, Blocks.SPORE_BLOSSOM,
 						Blocks.ATTACHED_MELON_STEM, Blocks.ATTACHED_PUMPKIN_STEM, Blocks.WHEAT, Blocks.ACACIA_SAPLING, Blocks.BIRCH_SAPLING,
-						Blocks.CHERRY_SAPLING, Blocks.DARK_OAK_SAPLING, Blocks.JUNGLE_SAPLING, Blocks.OAK_SAPLING, Blocks.SPRUCE_SAPLING
+						Blocks.CHERRY_SAPLING, Blocks.DARK_OAK_SAPLING, Blocks.JUNGLE_SAPLING, Blocks.OAK_SAPLING, Blocks.SPRUCE_SAPLING,
+						Blocks.BAMBOO, Blocks.BAMBOO_SAPLING
 				));
+
+		// TODO: Fix bamboo item color
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> SEASONS_COLOR_ADDITIONS_MAP.get(season).toInt(), Items.BAMBOO);
 	}
 
 	private void reloadChunkColors(@NotNull ClientWorld world) {
