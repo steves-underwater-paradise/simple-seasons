@@ -9,16 +9,24 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.profiler.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class SimpleSeasons implements ModInitializer {
 	public static final String MOD_ID = "simple-seasons";
@@ -74,6 +82,41 @@ public class SimpleSeasons implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Initializing {}!", MOD_NAME);
+
+//		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleResourceReloadListener() {
+//			@Override
+//			public Identifier getFabricId() {
+//				return new Identifier(MOD_NAMESPACE, "season");
+//			}
+//
+//			@Override
+//			public CompletableFuture<Void> reload(Synchronizer helper, ResourceManager manager, Profiler loadProfiler, Profiler applyProfiler, Executor loadExecutor, Executor applyExecutor) {
+//				for (Identifier id : manager.findResources("season", path -> path.toString().endsWith(".json")).keySet()) {
+//					if (manager.getResource(id).isEmpty()) {
+//						continue;
+//					}
+//
+//					try (InputStream stream = manager.getResource(id).get().getInputStream()) {
+//						// Consume the stream however you want, medium, rare, or well done.
+//					} catch (Exception e) {
+//						LOGGER.error("Error occurred while loading resource json {}, stack trace:\n{}", id.toString(), e);
+//					}
+//				}
+//
+//				// TODO
+//				return load(manager, loadProfiler, loadExecutor).thenAccept(apply(data, manager, applyProfiler, applyExecutor));
+//			}
+//
+//			@Override
+//			public CompletableFuture<Void> load(ResourceManager manager, Profiler profiler, Executor executor) {
+//				return null;
+//			}
+//
+//			@Override
+//			public CompletableFuture<Void> apply(Object data, ResourceManager manager, Profiler profiler, Executor executor) {
+//				return null;
+//			}
+//		});
 
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			var overworld = server.getOverworld();

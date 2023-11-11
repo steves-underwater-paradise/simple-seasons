@@ -2,15 +2,17 @@ package io.github.steveplays28.simpleseasons.client;
 
 import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
 import io.github.steveplays28.simpleseasons.client.model.SeasonClampedModelPredicateProvider;
+import io.github.steveplays28.simpleseasons.mixin.accessor.WorldRendererAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.render.chunk.ChunkBuilder;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -33,17 +35,11 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 			if (client.world == null || client.player == null) return;
 
 			season = buf.readInt();
-			client.world.reloadColor();
 
 			var initialLoad = buf.readBoolean();
 			if (initialLoad) return;
 
-			var viewDistance = MinecraftClient.getInstance().options.getViewDistance().getValue();
-			var viewDistanceBlocks = viewDistance * 16;
-
-			scheduleChunkRenders(client.world, -viewDistanceBlocks, viewDistanceBlocks, -viewDistanceBlocks, viewDistanceBlocks,
-					-viewDistanceBlocks, viewDistanceBlocks
-			);
+			reloadChunkColors(client.world);
 		});
 	}
 
@@ -55,24 +51,11 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 				));
 	}
 
-	private void scheduleChunkRenders(ClientWorld world, int fromX, int toX, int fromY, int toY, int fromZ, int toZ) {
-		int lastChunkPosX = Integer.MAX_VALUE;
-		int lastChunkPosY = Integer.MAX_VALUE;
-		int lastChunkPosZ = Integer.MAX_VALUE;
+	private void reloadChunkColors(@NotNull ClientWorld world) {
+		world.reloadColor();
 
-		for (int x = fromX; x <= toX; x++) {
-			for (int y = fromY; y <= toY; y++) {
-				for (int z = fromZ; z <= toZ; z++) {
-					if (x == lastChunkPosX && y == lastChunkPosY && z == lastChunkPosZ) {
-						continue;
-					}
-
-					world.worldRenderer.scheduleChunkRender(x >> 4, y >> 4, z >> 4, true);
-					lastChunkPosX = x;
-					lastChunkPosY = y;
-					lastChunkPosZ = z;
-				}
-			}
+		for (ChunkBuilder.BuiltChunk builtChunk : ((WorldRendererAccessor) world.worldRenderer).getChunks().chunks) {
+			builtChunk.scheduleRebuild(true);
 		}
 	}
 }
