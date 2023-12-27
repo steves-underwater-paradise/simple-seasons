@@ -5,6 +5,7 @@ import io.github.steveplays28.simpleseasons.command.season.SetSeasonCommand;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -58,6 +59,8 @@ public class SimpleSeasons implements ModInitializer {
 	public static final long TIME_PER_DAY = 50;
 	public static final long TIME_PER_SEASON_CHANGE = TIME_PER_DAY * 30 * 3;
 
+	public static MinecraftServer server;
+
 	public enum Seasons {
 		SPRING, SUMMER, FALL, WINTER;
 
@@ -82,6 +85,8 @@ public class SimpleSeasons implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Initializing {}!", MOD_NAME);
+
+		ServerLifecycleEvents.SERVER_STARTING.register(server -> SimpleSeasons.server = server);
 
 //		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleResourceReloadListener() {
 //			@Override
