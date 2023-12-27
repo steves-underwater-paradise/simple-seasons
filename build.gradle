@@ -1,4 +1,5 @@
 //file:noinspection GroovyAccessibility
+//file:noinspection GroovyAssignabilityCheck
 
 plugins {
     id 'fabric-loom' version '1.2-SNAPSHOT'
@@ -35,14 +36,7 @@ dependencies {
 
     // Runtime mods
     modRuntimeOnly "maven.modrinth:modmenu:${project.modmenu_version}"
-//    modRuntimeOnly "maven.modrinth:sodium:${project.sodium_version}"
-//    modRuntimeOnly "maven.modrinth:reeses-sodium-options:${project.reeses_sodium_options_version}"
-    modRuntimeOnly "maven.modrinth:lithium:${project.lithium_version}"
-    modRuntimeOnly "maven.modrinth:lazydfu:${project.lazydfu_version}"
-    modRuntimeOnly "maven.modrinth:ferrite-core:${project.ferrite_core_version}"
     modRuntimeOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
-    modRuntimeOnly "maven.modrinth:modernfix:${project.modernfix_version}"
-    modRuntimeOnly "maven.modrinth:starlight:${project.starlight_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
