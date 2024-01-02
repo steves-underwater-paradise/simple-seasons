@@ -27,7 +27,7 @@ public abstract class BiomeMixin {
 
 	@Shadow
 	@Final
-	private Biome.Weather weather;
+	public Biome.Weather weather;
 
 	@Inject(method = "getFoliageColor", at = @At(value = "HEAD"), cancellable = true)
 	public void getFoliageColorInject(CallbackInfoReturnable<Integer> cir) {
