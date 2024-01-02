@@ -4,6 +4,7 @@
   "package": "io.github.steveplays28.simpleseasons.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BeehiveBlockEntityMixin",
     "BiomeMixin",
     "FreezeTopLayerFeatureMixin",
     "SnowBlockMixin"
