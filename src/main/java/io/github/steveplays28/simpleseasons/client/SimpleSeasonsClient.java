@@ -6,6 +6,7 @@ import io.github.steveplays28.simpleseasons.mixin.accessor.WorldRendererAccessor
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.block.Blocks;
@@ -33,14 +34,17 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 		ModelPredicateProviderRegistry.register(new Identifier(MOD_ID, "season"), new SeasonClampedModelPredicateProvider());
 
 		ClientPlayNetworking.registerGlobalReceiver(SEASON_PACKET_CHANNEL, (client, handler, buf, responseSender) -> {
-			if (client.world == null || client.player == null) return;
+			if (client.world == null || client.player == null) {
+				return;
+			}
 
 			season = buf.readInt();
+		});
 
-			var initialLoad = buf.readBoolean();
-			if (initialLoad) return;
-
-			reloadChunkColors(client.world);
+		ClientTickEvents.START_WORLD_TICK.register(world -> {
+			if (world.getTime() % 4L == 0) {
+				reloadChunkColors(world);
+			}
 		});
 	}
 

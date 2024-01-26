@@ -15,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,10 +63,10 @@ public class SimpleSeasons implements ModInitializer {
 			this.value = ordinal();
 		}
 
-		public static String getName(int value) {
-			for (Seasons e : Seasons.values()) {
-				if (e.value == value) {
-					return e.name();
+		public static @NotNull String getName(int value) {
+			for (Seasons season : Seasons.values()) {
+				if (season.value == value) {
+					return season.name();
 				}
 			}
 
@@ -79,41 +80,6 @@ public class SimpleSeasons implements ModInitializer {
 		LOGGER.info("Initializing {}!", MOD_NAME);
 
 		ServerLifecycleEvents.SERVER_STARTING.register(server -> SimpleSeasons.server = server);
-
-//		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleResourceReloadListener() {
-//			@Override
-//			public Identifier getFabricId() {
-//				return new Identifier(MOD_NAMESPACE, "season");
-//			}
-//
-//			@Override
-//			public CompletableFuture<Void> reload(Synchronizer helper, ResourceManager manager, Profiler loadProfiler, Profiler applyProfiler, Executor loadExecutor, Executor applyExecutor) {
-//				for (Identifier id : manager.findResources("season", path -> path.toString().endsWith(".json")).keySet()) {
-//					if (manager.getResource(id).isEmpty()) {
-//						continue;
-//					}
-//
-//					try (InputStream stream = manager.getResource(id).get().getInputStream()) {
-//						// Consume the stream however you want, medium, rare, or well done.
-//					} catch (Exception e) {
-//						LOGGER.error("Error occurred while loading resource json {}, stack trace:\n{}", id.toString(), e);
-//					}
-//				}
-//
-//				// TODO
-//				return load(manager, loadProfiler, loadExecutor).thenAccept(apply(data, manager, applyProfiler, applyExecutor));
-//			}
-//
-//			@Override
-//			public CompletableFuture<Void> load(ResourceManager manager, Profiler profiler, Executor executor) {
-//				return null;
-//			}
-//
-//			@Override
-//			public CompletableFuture<Void> apply(Object data, ResourceManager manager, Profiler profiler, Executor executor) {
-//				return null;
-//			}
-//		});
 
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			var overworld = server.getOverworld();
@@ -136,14 +102,14 @@ public class SimpleSeasons implements ModInitializer {
 
 				// Send Simple Seasons state packet to all players
 				for (var player : server.getPlayerManager().getPlayerList()) {
-					sendSimpleSeasonsStatePacket(server, player, false);
+					sendSimpleSeasonsStatePacket(server, player);
 				}
 
 				LOGGER.info("Set season to {}.", simpleSeasonsState.season);
 			}
 		});
 
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> sendSimpleSeasonsStatePacket(server, handler.player, true));
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> sendSimpleSeasonsStatePacket(server, handler.player));
 
 		// Register commands
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
@@ -165,7 +131,7 @@ public class SimpleSeasons implements ModInitializer {
 		simpleSeasonsState.markDirty();
 
 		for (var player : server.getPlayerManager().getPlayerList()) {
-			sendSimpleSeasonsStatePacket(server, player, false);
+			sendSimpleSeasonsStatePacket(server, player);
 		}
 
 		LOGGER.info("Set season to {}.", simpleSeasonsState.season);
@@ -175,17 +141,16 @@ public class SimpleSeasons implements ModInitializer {
 		return temperature > 1.5f && downfall < 0.35f;
 	}
 
-	private static PacketByteBuf createSimpleSeasonsStatePacket(SimpleSeasonsState simpleSeasonsState, Boolean initialLoad) {
+	private static PacketByteBuf createSimpleSeasonsStatePacket(SimpleSeasonsState simpleSeasonsState) {
 		PacketByteBuf packet = PacketByteBufs.create();
 		packet.writeInt(simpleSeasonsState.season);
-		packet.writeBoolean(initialLoad);
 
 		return packet;
 	}
 
-	private static void sendSimpleSeasonsStatePacket(MinecraftServer server, ServerPlayerEntity player, Boolean initialLoad) {
+	private static void sendSimpleSeasonsStatePacket(MinecraftServer server, ServerPlayerEntity player) {
 		var simpleSeasonsState = SimpleSeasonsState.getServerState(server);
-		var simpleSeasonsStatePacket = createSimpleSeasonsStatePacket(simpleSeasonsState, initialLoad);
+		var simpleSeasonsStatePacket = createSimpleSeasonsStatePacket(simpleSeasonsState);
 
 		ServerPlayNetworking.send(player, SEASON_PACKET_CHANNEL, simpleSeasonsStatePacket);
 	}
