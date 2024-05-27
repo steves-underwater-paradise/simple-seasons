@@ -1,6 +1,7 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
+import io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient;
 import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
 import io.github.steveplays28.simpleseasons.mixin.accessor.ChunkRendererRegionAccessor;
 import io.github.steveplays28.simpleseasons.util.Color;
@@ -13,7 +14,6 @@ import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.color.world.GrassColors;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.*;
-import static io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient.season;
 
 @Environment(EnvType.CLIENT)
 @Mixin(BlockColors.class)
@@ -44,13 +43,13 @@ public class BlockColorsMixin {
 				var biomeWeather = biome.weather;
 
 				if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
-					foliageColor = foliageColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
+					foliageColor = foliageColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 					return foliageColor;
 				}
 			}
 		}
 
-		foliageColor = foliageColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
+		foliageColor = foliageColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 		return foliageColor;
 	}
 
@@ -69,13 +68,13 @@ public class BlockColorsMixin {
 				var biomeWeather = biome.weather;
 
 				if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
-					grassColor = grassColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
+					grassColor = grassColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 					return grassColor;
 				}
 			}
 		}
 
-		grassColor = grassColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
+		grassColor = grassColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 		return grassColor;
 	}
 
@@ -98,13 +97,13 @@ public class BlockColorsMixin {
 			var biomeWeather = biome.weather;
 
 			if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
-				spruceLeavesColor = spruceLeavesColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
+				spruceLeavesColor = spruceLeavesColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 				cir.setReturnValue(spruceLeavesColor.toInt());
 				return;
 			}
 		}
 
-		spruceLeavesColor = spruceLeavesColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
+		spruceLeavesColor = spruceLeavesColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 		cir.setReturnValue(spruceLeavesColor.toInt());
 	}
 
@@ -118,13 +117,13 @@ public class BlockColorsMixin {
 			var biomeWeather = biome.weather;
 
 			if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
-				birchLeavesColor = birchLeavesColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
+				birchLeavesColor = birchLeavesColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 				cir.setReturnValue(birchLeavesColor.toInt());
 				return;
 			}
 		}
 
-		birchLeavesColor = birchLeavesColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
+		birchLeavesColor = birchLeavesColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 		cir.setReturnValue(birchLeavesColor.toInt());
 	}
 

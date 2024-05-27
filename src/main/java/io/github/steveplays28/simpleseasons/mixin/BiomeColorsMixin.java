@@ -1,6 +1,7 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
+import io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient;
 import io.github.steveplays28.simpleseasons.mixin.accessor.ChunkRendererRegionAccessor;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.fabricmc.api.EnvType;
@@ -16,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASONS_COLOR_ADDITIONS_MAP;
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP;
-import static io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient.season;
 
 @Environment(EnvType.CLIENT)
 @Mixin(BiomeColors.class)
@@ -32,13 +32,13 @@ public class BiomeColorsMixin {
 			var biomeWeather = biome.weather;
 
 			if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
-				grassColor = grassColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
+				grassColor = grassColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 				cir.setReturnValue(grassColor.toInt());
 				return;
 			}
 		}
 
-		grassColor = grassColor.add(SimpleSeasons.SEASONS_COLOR_ADDITIONS_MAP.get(season));
+		grassColor = grassColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 		cir.setReturnValue(grassColor.toInt());
 	}
 }

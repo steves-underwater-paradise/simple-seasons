@@ -2,12 +2,13 @@ package io.github.steveplays28.simpleseasons.client;
 
 import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
 import io.github.steveplays28.simpleseasons.client.model.SeasonClampedModelPredicateProvider;
+import io.github.steveplays28.simpleseasons.client.state.ClientSeasonTracker;
 import io.github.steveplays28.simpleseasons.mixin.accessor.WorldRendererAccessor;
+import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
@@ -19,11 +20,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static io.github.steveplays28.simpleseasons.SimpleSeasons.*;
+import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
+import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASONS_COLOR_ADDITIONS_MAP;
 
 @Environment(EnvType.CLIENT)
 public class SimpleSeasonsClient implements ClientModInitializer {
-	public static int season;
+	public static final SeasonTracker seasonTracker = new ClientSeasonTracker();
 
 	@Override
 	public void onInitializeClient() {
@@ -33,13 +35,7 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 		// Register season model predicate provider
 		ModelPredicateProviderRegistry.register(new Identifier(MOD_ID, "season"), new SeasonClampedModelPredicateProvider());
 
-		ClientPlayNetworking.registerGlobalReceiver(SEASON_PACKET_CHANNEL, (client, handler, buf, responseSender) -> {
-			if (client.world == null || client.player == null) {
-				return;
-			}
 
-			season = buf.readInt();
-		});
 
 		ClientTickEvents.START_WORLD_TICK.register(world -> {
 			if (world.getTime() % 4L == 0) {
@@ -57,7 +53,7 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 				));
 
 		// TODO: Fix bamboo item color
-		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> SEASONS_COLOR_ADDITIONS_MAP.get(season).toInt(), Items.BAMBOO);
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> SEASONS_COLOR_ADDITIONS_MAP.get(seasonTracker.getSeason().getId()).toInt(), Items.BAMBOO);
 	}
 
 	private void reloadChunkColors(@NotNull ClientWorld world) {

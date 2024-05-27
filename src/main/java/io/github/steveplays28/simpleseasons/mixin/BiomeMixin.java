@@ -1,6 +1,8 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
+import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
+import io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -14,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASONS_COLOR_ADDITIONS_MAP;
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP;
-import static io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient.season;
 
 @Mixin(Biome.class)
 public abstract class BiomeMixin {
@@ -34,9 +35,10 @@ public abstract class BiomeMixin {
 		var foliageColor = new Color(this.effects.getFoliageColor().orElseGet(this::getDefaultFoliageColor));
 
 		if (SimpleSeasons.isDryBiome(weather.temperature(), weather.downfall())) {
-			foliageColor = foliageColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(season));
+			foliageColor = foliageColor.add(
+					SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 		} else {
-			foliageColor = foliageColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(season));
+			foliageColor = foliageColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 		}
 
 		cir.setReturnValue(foliageColor.toInt());
@@ -47,7 +49,7 @@ public abstract class BiomeMixin {
 		var originalPrecipitation = cir.getReturnValue();
 		if (originalPrecipitation == Biome.Precipitation.NONE) return;
 
-		if (season == SimpleSeasons.Seasons.WINTER.ordinal()) {
+		if (SimpleSeasonsClient.seasonTracker.getSeason().getId() == SeasonTracker.Seasons.WINTER.ordinal()) {
 			cir.setReturnValue(Biome.Precipitation.SNOW);
 		} else {
 			cir.setReturnValue(Biome.Precipitation.RAIN);
@@ -56,6 +58,6 @@ public abstract class BiomeMixin {
 
 	@Inject(method = "doesNotSnow", at = @At(value = "HEAD"), cancellable = true)
 	public void doesNotSnowInject(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-		cir.setReturnValue(season != SimpleSeasons.Seasons.WINTER.ordinal());
+		cir.setReturnValue(SimpleSeasonsClient.seasonTracker.getSeason().getId() != SeasonTracker.Seasons.WINTER.ordinal());
 	}
 }

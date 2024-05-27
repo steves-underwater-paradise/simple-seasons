@@ -1,6 +1,6 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
-import io.github.steveplays28.simpleseasons.SimpleSeasons;
+import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BeehiveBlockEntity;
@@ -28,7 +28,7 @@ public class BeehiveBlockEntityMixin extends BlockEntity {
 			return;
 		}
 
-		if (SimpleSeasonsApi.getSeason(world) == SimpleSeasons.Seasons.WINTER.value) {
+		if (SimpleSeasonsApi.getSeason(world) == SeasonTracker.Seasons.WINTER) {
 			cir.cancel();
 		}
 	}
