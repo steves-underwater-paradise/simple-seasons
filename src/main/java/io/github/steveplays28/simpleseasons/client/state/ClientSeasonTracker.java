@@ -1,5 +1,6 @@
 package io.github.steveplays28.simpleseasons.client.state;
 
+import io.github.steveplays28.simpleseasons.client.util.rendering.RenderingUtil;
 import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -17,10 +18,11 @@ public class ClientSeasonTracker extends SeasonTracker {
 	}
 
 	private void onSeasonStatePacketReceived(@NotNull MinecraftClient client, @NotNull ClientPlayNetworkHandler clientPlayNetworkHandler, @NotNull PacketByteBuf buf, @NotNull PacketSender responseSender) {
-		if (client.world == null || client.player == null) {
+		if (client.world == null) {
 			return;
 		}
 
 		this.setSeason(buf.readInt());
+		RenderingUtil.reloadChunkColors(client.world);
 	}
 }
