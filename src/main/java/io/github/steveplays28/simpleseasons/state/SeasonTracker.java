@@ -82,10 +82,11 @@ public abstract class SeasonTracker {
 	public void setSeasonProgress(float seasonProgress) {
 		if (seasonProgress >= 1f) {
 			incrementSeason();
+			return;
 		}
 
 		if (seasonProgress < 0f) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Error occurred while setting the season's progress: seasonProgress < 0f.");
 		}
 
 		this.seasonProgress.setProgress(seasonProgress);
