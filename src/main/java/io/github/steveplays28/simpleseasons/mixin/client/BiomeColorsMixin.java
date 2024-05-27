@@ -1,8 +1,8 @@
-package io.github.steveplays28.simpleseasons.mixin;
+package io.github.steveplays28.simpleseasons.mixin.client;
 
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient;
-import io.github.steveplays28.simpleseasons.mixin.accessor.ChunkRendererRegionAccessor;
+import io.github.steveplays28.simpleseasons.mixin.client.accessor.ChunkRendererRegionAccessor;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

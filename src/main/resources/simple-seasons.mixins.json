@@ -10,10 +10,11 @@
     "SnowBlockMixin"
   ],
   "client": [
-    "BiomeColorsMixin",
-    "BlockColorsMixin",
-    "accessor.ChunkRendererRegionAccessor",
-    "accessor.WorldRendererAccessor"
+    "client.BiomeColorsMixin",
+    "client.BiomeMixin",
+    "client.BlockColorsMixin",
+    "client.accessor.ChunkRendererRegionAccessor",
+    "client.accessor.WorldRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

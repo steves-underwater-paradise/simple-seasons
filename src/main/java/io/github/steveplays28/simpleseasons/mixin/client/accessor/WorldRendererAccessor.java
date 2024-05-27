@@ -1,4 +1,4 @@
-package io.github.steveplays28.simpleseasons.mixin.accessor;
+package io.github.steveplays28.simpleseasons.mixin.client.accessor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
