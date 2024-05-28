@@ -12,7 +12,7 @@
     "repo": "https://github.com/Steveplays28/simple-seasons"
   },
   "license": "LGPL-3.0",
-  "icon": "assets/simpleseasons/icon.png",
+  "icon": "assets/simple_seasons/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
