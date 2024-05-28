@@ -19,7 +19,7 @@ import java.util.List;
 
 public class SimpleSeasons implements ModInitializer {
 	public static final String MOD_ID = "simple-seasons";
-	public static final String MOD_NAMESPACE = "simpleseasons";
+	public static final String MOD_NAMESPACE = "simple_seasons";
 	public static final String MOD_NAME = "Simple Seasons";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 	public static final List<LiteralArgumentBuilder<ServerCommandSource>> COMMANDS = List.of(SetSeasonCommand.register());
