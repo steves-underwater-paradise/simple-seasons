@@ -1,5 +1,7 @@
 package io.github.steveplays28.simpleseasons.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import static io.github.steveplays28.simpleseasons.util.MathUtil.clamp;
 
 /**
@@ -22,7 +24,7 @@ public class Color {
 		blue = hex & 0xFF;
 	}
 
-	public Color(Color color) {
+	public Color(@NotNull Color color) {
 		red = color.red;
 		green = color.green;
 		blue = color.blue;
@@ -41,7 +43,7 @@ public class Color {
 		return hex;
 	}
 
-	public Color multiply(Color color) {
+	public Color multiply(@NotNull Color color) {
 		var newColor = new Color(this);
 
 		newColor.red = clamp(newColor.red * color.red, 0, 255);
@@ -51,7 +53,7 @@ public class Color {
 		return newColor;
 	}
 
-	public Color add(Color color) {
+	public Color add(@NotNull Color color) {
 		var newColor = new Color(this);
 
 		newColor.red = clamp(newColor.red + color.red, 0, 255);
@@ -61,7 +63,7 @@ public class Color {
 		return newColor;
 	}
 
-	public Color subtract(Color color) {
+	public Color subtract(@NotNull Color color) {
 		var newColor = new Color(this);
 
 		newColor.red = clamp(newColor.red - color.red, 0, 255);
@@ -77,6 +79,16 @@ public class Color {
 		newColor.red = clamp(255 - this.red, 0, 255);
 		newColor.green = clamp(255 - this.green, 0, 255);
 		newColor.blue = clamp(255 - this.blue, 0, 255);
+
+		return newColor;
+	}
+
+	public Color lerp(@NotNull Color endColor, float t) {
+		var newColor = new Color(this);
+
+		newColor.red = MathUtil.lerp(this.red, endColor.red, t);
+		newColor.green = MathUtil.lerp(this.green, endColor.green, t);
+		newColor.blue = MathUtil.lerp(this.blue, endColor.blue, t);
 
 		return newColor;
 	}

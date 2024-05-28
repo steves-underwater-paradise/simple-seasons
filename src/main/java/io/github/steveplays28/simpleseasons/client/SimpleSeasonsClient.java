@@ -1,14 +1,18 @@
 package io.github.steveplays28.simpleseasons.client;
 
+import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
 import io.github.steveplays28.simpleseasons.client.model.SeasonClampedModelPredicateProvider;
 import io.github.steveplays28.simpleseasons.client.state.ClientSeasonTracker;
+import io.github.steveplays28.simpleseasons.client.util.season.color.SeasonColorUtil;
 import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
@@ -16,14 +20,17 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
-import static io.github.steveplays28.simpleseasons.SimpleSeasons.SEASONS_COLOR_ADDITIONS_MAP;
 
 @Environment(EnvType.CLIENT)
 public class SimpleSeasonsClient implements ClientModInitializer {
 	public static final SeasonTracker seasonTracker = new ClientSeasonTracker();
 
+	private MinecraftClient client;
+
 	@Override
 	public void onInitializeClient() {
+		ClientLifecycleEvents.CLIENT_STARTED.register(client -> this.client = client);
+
 		// Register vanilla block color providers using the API
 		registerVanillaColorProviders();
 
@@ -40,6 +47,12 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 				));
 
 		// TODO: Fix bamboo item color
-		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> SEASONS_COLOR_ADDITIONS_MAP.get(seasonTracker.getSeason().getId()).toInt(), Items.BAMBOO);
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+			if (client.world == null) {
+				throw new IllegalStateException("Error occurred while registering item color providers: client.world == null.");
+			}
+
+			return SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(client.world), SimpleSeasonsApi.getSeasonProgress(client.world)).toInt();
+		}, Items.BAMBOO);
 	}
 }

@@ -3,9 +3,8 @@ package io.github.steveplays28.simpleseasons;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.steveplays28.simpleseasons.command.season.SetSeasonCommand;
 import io.github.steveplays28.simpleseasons.server.state.ServerSeasonTracker;
-import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import io.github.steveplays28.simpleseasons.state.SeasonState;
-import io.github.steveplays28.simpleseasons.util.Color;
+import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -17,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 
 public class SimpleSeasons implements ModInitializer {
 	public static final String MOD_ID = "simple-seasons";
@@ -28,26 +26,6 @@ public class SimpleSeasons implements ModInitializer {
 	public static final Identifier SEASON_PACKET_CHANNEL = new Identifier(MOD_NAMESPACE);
 	// Mod IDs
 	public static final String MINECRAFT_MOD_ID = "minecraft";
-	// Per-season color additions
-	public static final Color SPRING_COLOR_ADDITION = new Color(255 / 3, 255 / 3, 0);
-	public static final Color SUMMER_COLOR_ADDITION = new Color(0, 0, 0);
-	public static final Color FALL_COLOR_ADDITION = new Color(255 / 3, 0, 0);
-	public static final Color WINTER_COLOR_ADDITION = new Color(255 / 2, 255 / 2, 255 / 2);
-	// Dry biomes
-	public static final Color HOT_DRY_BIOMES_COLOR_ADDITION = new Color(120, 0, 0);
-	public static final Color WET_DRY_BIOMES_COLOR_ADDITION = new Color(50, 50, 0);
-	// Seasons color map
-	public static final Map<Integer, Color> SEASONS_COLOR_ADDITIONS_MAP = Map.of(
-			SeasonTracker.Seasons.SPRING.ordinal(),
-			SPRING_COLOR_ADDITION, SeasonTracker.Seasons.SUMMER.ordinal(), SUMMER_COLOR_ADDITION, SeasonTracker.Seasons.FALL.ordinal(),
-			FALL_COLOR_ADDITION, SeasonTracker.Seasons.WINTER.ordinal(), WINTER_COLOR_ADDITION
-	);
-	// Dry biomes
-	public static final Map<Integer, Color> SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP = Map.of(SeasonTracker.Seasons.SPRING.ordinal(),
-			HOT_DRY_BIOMES_COLOR_ADDITION, SeasonTracker.Seasons.SUMMER.ordinal(), HOT_DRY_BIOMES_COLOR_ADDITION,
-			SeasonTracker.Seasons.FALL.ordinal(), WET_DRY_BIOMES_COLOR_ADDITION, SeasonTracker.Seasons.WINTER.ordinal(),
-			WET_DRY_BIOMES_COLOR_ADDITION
-	);
 	public static final long TIME_PER_DAY = 50;
 	public static final long TIME_PER_SEASON_CHANGE = TIME_PER_DAY * 30 * 3;
 
@@ -70,15 +48,20 @@ public class SimpleSeasons implements ModInitializer {
 		});
 	}
 
-	// TODO: Move into SimpleSeasonsAPI
+	// TODO: Move into SimpleSeasonsApi
 	public static SeasonTracker.Seasons getSeason() {
 		var simpleSeasonsState = SeasonState.getServerState(server);
 		return SeasonTracker.Seasons.of(simpleSeasonsState.season);
 	}
 
-	// TODO: Move into SimpleSeasonsAPI
+	// TODO: Move into SimpleSeasonsApi
 	public static void setSeason(int seasonId) {
 		SEASON_TRACKER.setSeason(seasonId);
+	}
+
+	// TODO: Move into SimpleSeasonsApi
+	public static float getSeasonProgress() {
+		return SEASON_TRACKER.getSeasonProgress();
 	}
 
 	@Contract(pure = true)

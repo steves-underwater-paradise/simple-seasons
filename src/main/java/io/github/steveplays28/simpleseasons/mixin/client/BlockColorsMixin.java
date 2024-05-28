@@ -1,8 +1,9 @@
 package io.github.steveplays28.simpleseasons.mixin.client;
 
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
-import io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient;
+import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
+import io.github.steveplays28.simpleseasons.client.util.season.color.SeasonColorUtil;
 import io.github.steveplays28.simpleseasons.mixin.client.accessor.ChunkRendererRegionAccessor;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.fabricmc.api.EnvType;
@@ -23,58 +24,52 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static io.github.steveplays28.simpleseasons.SimpleSeasons.*;
-
 @Environment(EnvType.CLIENT)
 @Mixin(BlockColors.class)
 public class BlockColorsMixin {
 	@Unique
 	private static Color getFoliageColor(BlockRenderView world, BlockPos pos) {
-		Color foliageColor;
-
 		if (world == null || pos == null) {
-			foliageColor = new Color(FoliageColors.getDefaultColor());
-		} else {
-			foliageColor = new Color(BiomeColors.getFoliageColor(world, pos));
-
-			if (world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
-				var clientWorld = (ClientWorld) chunkRendererRegion.getWorld();
-				var biome = clientWorld.getBiome(pos).value();
-				var biomeWeather = biome.weather;
-
-				if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
-					foliageColor = foliageColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
-					return foliageColor;
-				}
-			}
+			return new Color(FoliageColors.getDefaultColor());
 		}
 
-		foliageColor = foliageColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
+		Color foliageColor = new Color(BiomeColors.getFoliageColor(world, pos));
+		if (world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
+			var clientWorld = (ClientWorld) chunkRendererRegion.getWorld();
+			var biome = clientWorld.getBiome(pos).value();
+			var biomeWeather = biome.weather;
+
+			if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
+				foliageColor = foliageColor.add(SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld), true));
+				return foliageColor;
+			}
+
+			foliageColor = foliageColor.add(SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld)));
+		}
+
 		return foliageColor;
 	}
 
 	@Unique
 	private static Color getGrassColor(BlockRenderView world, BlockPos pos) {
-		Color grassColor;
-
 		if (world == null || pos == null) {
-			grassColor = new Color(GrassColors.getDefaultColor());
-		} else {
-			grassColor = new Color(BiomeColors.getGrassColor(world, pos));
-
-			if (world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
-				var clientWorld = (ClientWorld) chunkRendererRegion.getWorld();
-				var biome = clientWorld.getBiome(pos).value();
-				var biomeWeather = biome.weather;
-
-				if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
-					grassColor = grassColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
-					return grassColor;
-				}
-			}
+			return new Color(GrassColors.getDefaultColor());
 		}
 
-		grassColor = grassColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
+		var grassColor = new Color(BiomeColors.getGrassColor(world, pos));
+		if (world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
+			var clientWorld = (ClientWorld) chunkRendererRegion.getWorld();
+			var biome = clientWorld.getBiome(pos).value();
+			var biomeWeather = biome.weather;
+
+			if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
+				grassColor = grassColor.add(SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld), true));
+				return grassColor;
+			}
+
+			grassColor = grassColor.add(SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld)));
+		}
+
 		return grassColor;
 	}
 
@@ -97,13 +92,15 @@ public class BlockColorsMixin {
 			var biomeWeather = biome.weather;
 
 			if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
-				spruceLeavesColor = spruceLeavesColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
+				spruceLeavesColor = spruceLeavesColor.add(
+						SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld), true));
 				cir.setReturnValue(spruceLeavesColor.toInt());
 				return;
 			}
+
+			spruceLeavesColor = spruceLeavesColor.add(SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld)));
 		}
 
-		spruceLeavesColor = spruceLeavesColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 		cir.setReturnValue(spruceLeavesColor.toInt());
 	}
 
@@ -117,13 +114,15 @@ public class BlockColorsMixin {
 			var biomeWeather = biome.weather;
 
 			if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
-				birchLeavesColor = birchLeavesColor.add(SEASONS_DRY_BIOMES_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
+				birchLeavesColor = birchLeavesColor.add(
+						SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld), true));
 				cir.setReturnValue(birchLeavesColor.toInt());
 				return;
 			}
+
+			birchLeavesColor = birchLeavesColor.add(SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld)));
 		}
 
-		birchLeavesColor = birchLeavesColor.add(SEASONS_COLOR_ADDITIONS_MAP.get(SimpleSeasonsClient.seasonTracker.getSeason().getId()));
 		cir.setReturnValue(birchLeavesColor.toInt());
 	}
 

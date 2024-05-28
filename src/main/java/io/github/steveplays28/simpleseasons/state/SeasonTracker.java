@@ -36,6 +36,15 @@ public abstract class SeasonTracker {
 			return value;
 		}
 
+		public Seasons getNext() {
+			var nextSeasonId = this.getId() + 1;
+			if (nextSeasonId >= Seasons.values().length) {
+				nextSeasonId = 0;
+			}
+
+			return Seasons.of(nextSeasonId);
+		}
+
 		/**
 		 * Gets the season from an ID.
 		 *

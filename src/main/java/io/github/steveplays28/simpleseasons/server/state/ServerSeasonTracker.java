@@ -34,17 +34,33 @@ public class ServerSeasonTracker extends SeasonTracker {
 
 		var seasonState = SeasonState.getServerState(server);
 		seasonState.season = seasonId;
-		seasonState.lastSeasonChangeTime = server.getOverworld().getTime();
+		seasonState.seasonProgress = getSeasonProgress();
 		seasonState.markDirty();
 		sendSeasonStatePacketToAllPlayers();
 
 		SimpleSeasons.LOGGER.info("Set season to {}.", this.getSeason());
 	}
 
+	@Override
+	public void setSeasonProgress(float seasonProgress) {
+		super.setSeasonProgress(seasonProgress);
+
+		if (server == null) {
+			throw new IllegalStateException("Error occurred while trying to set the season: server is null.");
+		}
+
+		var seasonState = SeasonState.getServerState(server);
+		seasonState.season = getSeason().getId();
+		seasonState.seasonProgress = getSeasonProgress();
+		seasonState.markDirty();
+		sendSeasonStatePacketToAllPlayers();
+	}
+
 	// TODO: Move into SeasonStatePacket class
 	private static @NotNull PacketByteBuf createSeasonsStatePacket(@NotNull SeasonState seasonState) {
 		PacketByteBuf packet = PacketByteBufs.create();
 		packet.writeInt(seasonState.season);
+		packet.writeFloat(seasonState.seasonProgress);
 
 		return packet;
 	}
