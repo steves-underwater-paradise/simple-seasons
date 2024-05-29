@@ -83,18 +83,30 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 
 			try {
 				var dataPackJson = JsonParser.parseReader(dataPackJsonFile.getValue().getReader()).getAsJsonObject();
-				var dataPackJsonSeasonColors = dataPackJson.asMap();
-				@NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color> blockSeasonColors = new HashMap<>();
-				for (var dataPackJsonSeasonColor : dataPackJsonSeasonColors.entrySet()) {
-					blockSeasonColors.put(
-							SeasonTracker.Seasons.parse(dataPackJsonSeasonColor.getKey()),
-							Color.parse(dataPackJsonSeasonColor.getValue().getAsString())
-					);
+				var dataPackJsonBiomesSeasonColors = dataPackJson.asMap();
+				@NotNull Map<@NotNull Identifier, @NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color>> blockBiomesSeasonColors = new HashMap<>();
+				for (var dataPackJsonBiomesSeasonColor : dataPackJsonBiomesSeasonColors.entrySet()) {
+					@NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color> blockSeasonColors = new HashMap<>();
+					for (var dataPackJsonSeasonColor : dataPackJsonBiomesSeasonColor.getValue().getAsJsonObject().entrySet()) {
+						blockSeasonColors.put(
+								SeasonTracker.Seasons.parse(dataPackJsonSeasonColor.getKey()),
+								Color.parse(dataPackJsonSeasonColor.getValue().getAsString())
+						);
+					}
+
+					var biomeKey = dataPackJsonBiomesSeasonColor.getKey();
+					// Remove biome tag prefix if it exists
+					// # is an illegal character in identifiers
+					if (biomeKey.startsWith("#")) {
+						biomeKey = biomeKey.substring(1);
+					}
+
+					blockBiomesSeasonColors.put(new Identifier(biomeKey), blockSeasonColors);
 				}
 
 				Registry.register(
 						SeasonColorsRegistries.BLOCK_SEASON_COLORS_REGISTRY, blockId,
-						blockSeasonColors
+						blockBiomesSeasonColors
 				);
 			} catch (IOException | IllegalArgumentException e) {
 				SimpleSeasons.LOGGER.error("Exception thrown while reading a datapack JSON file:\n", e);
@@ -116,18 +128,23 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 
 			try {
 				var dataPackJson = JsonParser.parseReader(dataPackJsonFile.getValue().getReader()).getAsJsonObject();
-				var dataPackJsonSeasonColors = dataPackJson.asMap();
-				@NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color> itemSeasonColors = new HashMap<>();
-				for (var dataPackJsonSeasonColor : dataPackJsonSeasonColors.entrySet()) {
-					itemSeasonColors.put(
-							SeasonTracker.Seasons.parse(dataPackJsonSeasonColor.getKey()),
-							Color.parse(dataPackJsonSeasonColor.getValue().getAsString())
-					);
+				var dataPackJsonBiomesSeasonColors = dataPackJson.asMap();
+				@NotNull Map<@NotNull Identifier, @NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color>> itemBiomesSeasonColors = new HashMap<>();
+				for (var dataPackJsonBiomesSeasonColor : dataPackJsonBiomesSeasonColors.entrySet()) {
+					@NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color> itemSeasonColors = new HashMap<>();
+					for (var dataPackJsonSeasonColor : dataPackJsonBiomesSeasonColor.getValue().getAsJsonObject().entrySet()) {
+						itemSeasonColors.put(
+								SeasonTracker.Seasons.parse(dataPackJsonSeasonColor.getKey()),
+								Color.parse(dataPackJsonSeasonColor.getValue().getAsString())
+						);
+					}
+
+					itemBiomesSeasonColors.put(new Identifier(dataPackJsonBiomesSeasonColor.getKey()), itemSeasonColors);
 				}
 
 				Registry.register(
-						SeasonColorsRegistries.ITEM_SEASON_COLORS_REGISTRY, itemId,
-						itemSeasonColors
+						SeasonColorsRegistries.BLOCK_SEASON_COLORS_REGISTRY, itemId,
+						itemBiomesSeasonColors
 				);
 			} catch (IOException | IllegalArgumentException e) {
 				SimpleSeasons.LOGGER.error("Exception thrown while reading a datapack JSON file:\n", e);

@@ -13,8 +13,10 @@ import java.util.Map;
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
 
 public class SeasonColorsRegistries {
-	public static final @NotNull SimpleRegistry<@NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color>> BLOCK_SEASON_COLORS_REGISTRY = FabricRegistryBuilder.createSimple(
-			RegistryKey.<Map<SeasonTracker.Seasons, Color>>ofRegistry(new Identifier(MOD_ID, "block_season_colors"))).buildAndRegister();
-	public static final @NotNull SimpleRegistry<@NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color>> ITEM_SEASON_COLORS_REGISTRY = FabricRegistryBuilder.createSimple(
-			RegistryKey.<Map<SeasonTracker.Seasons, Color>>ofRegistry(new Identifier(MOD_ID, "item_season_colors"))).buildAndRegister();
+	public static final @NotNull SimpleRegistry<@NotNull Map<@NotNull Identifier, @NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color>>> BLOCK_SEASON_COLORS_REGISTRY = FabricRegistryBuilder.createSimple(
+			RegistryKey.<Map<Identifier, Map<SeasonTracker.Seasons, Color>>>ofRegistry(
+					new Identifier(MOD_ID, "season_colors/block"))).buildAndRegister();
+	public static final @NotNull SimpleRegistry<@NotNull Map<@NotNull Identifier, @NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color>>> ITEM_SEASON_COLORS_REGISTRY = FabricRegistryBuilder.createSimple(
+			RegistryKey.<Map<Identifier, Map<SeasonTracker.Seasons, Color>>>ofRegistry(
+					new Identifier(MOD_ID, "season_colors/item"))).buildAndRegister();
 }
