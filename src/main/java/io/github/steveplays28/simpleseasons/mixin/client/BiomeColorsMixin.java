@@ -1,6 +1,5 @@
 package io.github.steveplays28.simpleseasons.mixin.client;
 
-import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.client.util.season.color.SeasonColorUtil;
 import io.github.steveplays28.simpleseasons.mixin.client.accessor.ChunkRendererRegionAccessor;
@@ -9,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,25 +19,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 @Mixin(BiomeColors.class)
 public class BiomeColorsMixin {
-	@Inject(method = "getGrassColor", at = @At(value = "RETURN"), cancellable = true)
-	private static void getGrassColorInject(BlockRenderView world, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
-		var grassColorVanilla = cir.getReturnValue();
-		var grassColor = new Color(grassColorVanilla);
-
-		if (world != null && pos != null && world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
+	@Inject(method = {"getGrassColor", "getFoliageColor"}, at = @At(value = "RETURN"), cancellable = true)
+	private static void simple_seasons$modifyGrassAndFoliageColors(BlockRenderView world, BlockPos blockPos, CallbackInfoReturnable<Integer> cir) {
+		if (world != null && blockPos != null && world instanceof ChunkRendererRegionAccessor chunkRendererRegion) {
+			var vanillaGrassColor = new Color(cir.getReturnValue());
 			var clientWorld = (ClientWorld) chunkRendererRegion.getWorld();
-			var biome = clientWorld.getBiome(pos).value();
-			var biomeWeather = biome.weather;
-
-			if (SimpleSeasons.isDryBiome(biomeWeather.temperature(), biomeWeather.downfall())) {
-				grassColor = grassColor.add(SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld), true));
-				cir.setReturnValue(grassColor.toInt());
-				return;
-			}
-
-			grassColor = grassColor.add(SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld)));
+			var biome = clientWorld.getBiome(blockPos).value();
+			cir.setReturnValue(
+					SeasonColorUtil.getBlockSeasonColor(Registries.BLOCK.getId(clientWorld.getBlockState(blockPos).getBlock()), biome,
+							SimpleSeasonsApi.getSeason(clientWorld), SimpleSeasonsApi.getSeasonProgress(clientWorld), vanillaGrassColor
+					).toInt());
 		}
-
-		cir.setReturnValue(grassColor.toInt());
 	}
 }

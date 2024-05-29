@@ -3,6 +3,7 @@ package io.github.steveplays28.simpleseasons.client;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
 import io.github.steveplays28.simpleseasons.client.model.SeasonClampedModelPredicateProvider;
+import io.github.steveplays28.simpleseasons.client.resource.SimpleSeasonsResourceReloadListener;
 import io.github.steveplays28.simpleseasons.client.state.ClientSeasonTracker;
 import io.github.steveplays28.simpleseasons.client.util.season.color.SeasonColorUtil;
 import io.github.steveplays28.simpleseasons.state.SeasonTracker;
@@ -11,10 +12,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -36,6 +40,8 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 
 		// Register season model predicate provider
 		ModelPredicateProviderRegistry.register(new Identifier(MOD_ID, "season"), new SeasonClampedModelPredicateProvider());
+
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSeasonsResourceReloadListener());
 	}
 
 	private void registerVanillaColorProviders() {
@@ -52,7 +58,10 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 				throw new IllegalStateException("Error occurred while registering item color providers: client.world == null.");
 			}
 
-			return SeasonColorUtil.getSeasonColorAddition(SimpleSeasonsApi.getSeason(client.world), SimpleSeasonsApi.getSeasonProgress(client.world)).toInt();
+			return SeasonColorUtil.getItemSeasonColor(Registries.ITEM.getId(stack.getItem()),
+					SimpleSeasonsApi.getSeason(client.world), SimpleSeasonsApi.getSeasonProgress(client.world),
+					SeasonColorUtil.FALLBACK_SEASON_COLOR
+			).toInt();
 		}, Items.BAMBOO);
 	}
 }

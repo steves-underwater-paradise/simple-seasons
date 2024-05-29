@@ -1,5 +1,6 @@
 package io.github.steveplays28.simpleseasons.state;
 
+import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import org.jetbrains.annotations.NotNull;
 
 // TODO: Make SeasonTracker be per world
@@ -36,7 +37,7 @@ public abstract class SeasonTracker {
 			return value;
 		}
 
-		public Seasons getNext() {
+		public @NotNull Seasons getNext() {
 			var nextSeasonId = this.getId() + 1;
 			if (nextSeasonId >= Seasons.values().length) {
 				nextSeasonId = 0;
@@ -48,11 +49,41 @@ public abstract class SeasonTracker {
 		/**
 		 * Gets the season from an ID.
 		 *
-		 * @param season The season's ID. Must be within the bounds of the <code>Seasons</code> enum.
-		 * @return The season at the requested ID in the <code>Seasons</code> enum.
+		 * @param season The season's ID. Must be within the bounds of {@link Seasons}.
+		 * @return The season at the requested ID in {@link Seasons}.
 		 */
-		public static Seasons of(int season) {
+		public static @NotNull Seasons of(int season) {
 			return Seasons.values()[season];
+		}
+
+		/**
+		 * Gets the season from either a {@link String} ID or from a {@link String} name.
+		 *
+		 * @param season Either the season's {@link String} ID or the season's {@link String} name. Must be within the bounds of {@link Seasons}.
+		 * @return The season at the requested ID in {@link Seasons}.
+		 */
+		@SuppressWarnings("ForLoopReplaceableByForEach")
+		public static @NotNull Seasons parse(@NotNull String season) {
+			var seasons = Seasons.values();
+			Integer seasonId = null;
+			try {
+				seasonId = Integer.parseInt(season);
+			} catch (NumberFormatException e) {
+				for (int i = 0; i < seasons.length; i++) {
+					var seasonValue = seasons[i];
+					if (seasonValue.name().equalsIgnoreCase(season)) {
+						seasonId = seasonValue.getId();
+					}
+				}
+
+				if (seasonId == null) {
+					SimpleSeasons.LOGGER.error(
+							"Exception thrown while trying to parse a String season into a SeasonTracker.Seasons value:\n", e);
+					return seasons[0];
+				}
+			}
+
+			return seasons[seasonId];
 		}
 	}
 
