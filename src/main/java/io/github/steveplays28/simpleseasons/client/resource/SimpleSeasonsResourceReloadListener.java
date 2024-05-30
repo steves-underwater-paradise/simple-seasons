@@ -43,7 +43,7 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 		return CompletableFuture.runAsync(() -> {
 			loadBlockSeasonColors(resourceManager);
 			loadItemSeasonColors(resourceManager);
-		}, executor);
+		});
 	}
 
 	/**
