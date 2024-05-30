@@ -58,10 +58,14 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 				throw new IllegalStateException("Error occurred while registering item color providers: client.world == null.");
 			}
 
-			return SeasonColorUtil.getItemSeasonColor(Registries.ITEM.getId(stack.getItem()),
-					SimpleSeasonsApi.getSeason(client.world), SimpleSeasonsApi.getSeasonProgress(client.world),
-					SeasonColorUtil.FALLBACK_SEASON_COLOR
-			).toInt();
+			var itemSeasonColor = SeasonColorUtil.getItemSeasonColor(Registries.ITEM.getId(stack.getItem()),
+					SimpleSeasonsApi.getSeason(client.world), SimpleSeasonsApi.getSeasonProgress(client.world)
+			);
+			if (itemSeasonColor == null) {
+				return SeasonColorUtil.FALLBACK_SEASON_COLOR_PRECALCULATED;
+			}
+
+			return itemSeasonColor.toInt();
 		}, Items.BAMBOO);
 	}
 }

@@ -10,15 +10,18 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SeasonColorUtil {
 	public static final @NotNull Color FALLBACK_SEASON_COLOR = new Color(129, 192, 62);
+	public static final int FALLBACK_SEASON_COLOR_PRECALCULATED = FALLBACK_SEASON_COLOR.toInt();
 
 	// TODO: Move into SimpleSeasonsClientApi
-	public static @NotNull Color getBlockSeasonColor(@NotNull Identifier blockIdentifier, @NotNull RegistryEntry<Biome> biomeRegistryEntry, SeasonTracker.@NotNull Seasons season, float seasonProgress, @NotNull Color fallbackSeasonColor) {
+	// TODO: Add a BlockPos->Color cache
+	public static @Nullable Color getBlockSeasonColor(@NotNull Identifier blockIdentifier, @NotNull RegistryEntry<Biome> biomeRegistryEntry, SeasonTracker.@NotNull Seasons season, float seasonProgress) {
 		var blockBiomesSeasonColors = SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY.get(blockIdentifier);
 		if (blockBiomesSeasonColors == null) {
-			return fallbackSeasonColor;
+			return null;
 		}
 
 		var biomeRegistryKey = biomeRegistryEntry.getKey();
@@ -47,15 +50,15 @@ public class SeasonColorUtil {
 			return blockSeasonColor.lerp(blockNextSeasonColor, seasonProgress);
 		}
 
-		return fallbackSeasonColor;
+		return null;
 	}
 
 	// TODO: Move into SimpleSeasonsClientApi
 	// TODO: Potentially add support for biomes and biome tags, instead of hardcoding minecraft:plains
-	public static @NotNull Color getItemSeasonColor(@NotNull Identifier itemIdentifier, SeasonTracker.@NotNull Seasons season, float seasonProgress, @NotNull Color fallbackSeasonColor) {
+	public static @Nullable Color getItemSeasonColor(@NotNull Identifier itemIdentifier, SeasonTracker.@NotNull Seasons season, float seasonProgress) {
 		var itemBiomesSeasonColors = SeasonColorRegistries.ITEM_SEASON_COLORS_REGISTRY.get(itemIdentifier);
 		if (itemBiomesSeasonColors == null) {
-			return fallbackSeasonColor;
+			return null;
 		}
 
 		var itemSeasonColors = itemBiomesSeasonColors.get(BiomeKeys.PLAINS.getValue());
