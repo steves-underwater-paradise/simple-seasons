@@ -2,9 +2,11 @@ package io.github.steveplays28.simpleseasons.client.resource;
 
 import com.google.gson.JsonParser;
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
-import io.github.steveplays28.simpleseasons.client.registry.SeasonColorsRegistries;
+import io.github.steveplays28.simpleseasons.client.registry.SeasonColorRegistries;
 import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import io.github.steveplays28.simpleseasons.util.Color;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.registry.Registry;
 import net.minecraft.resource.ResourceManager;
@@ -20,6 +22,7 @@ import java.util.concurrent.Executor;
 
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
 
+@Environment(EnvType.CLIENT)
 public class SimpleSeasonsResourceReloadListener implements SimpleResourceReloadListener<Void> {
 	private static final String JSON_FILE_SUFFIX = ".json";
 	private static final String SEASON_COLORS_FOLDER_NAME = "season_colors";
@@ -40,7 +43,7 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 		return CompletableFuture.runAsync(() -> {
 			loadBlockSeasonColors(resourceManager);
 			loadItemSeasonColors(resourceManager);
-		});
+		}, executor);
 	}
 
 	/**
@@ -77,7 +80,7 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 					splitDataPackJsonFilePath[splitDataPackJsonFilePath.length - 2],
 					splitDataPackJsonFilePath[splitDataPackJsonFilePath.length - 1]
 			);
-			if (SeasonColorsRegistries.BLOCK_SEASON_COLORS_REGISTRY.containsId(blockId)) {
+			if (SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY.containsId(blockId)) {
 				continue;
 			}
 
@@ -105,7 +108,7 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 				}
 
 				Registry.register(
-						SeasonColorsRegistries.BLOCK_SEASON_COLORS_REGISTRY, blockId,
+						SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY, blockId,
 						blockBiomesSeasonColors
 				);
 			} catch (IOException | IllegalArgumentException e) {
@@ -122,7 +125,7 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 
 		for (var dataPackJsonFile : dataPackJsonFiles.entrySet()) {
 			var itemId = dataPackJsonFile.getKey();
-			if (SeasonColorsRegistries.ITEM_SEASON_COLORS_REGISTRY.containsId(itemId)) {
+			if (SeasonColorRegistries.ITEM_SEASON_COLORS_REGISTRY.containsId(itemId)) {
 				continue;
 			}
 
@@ -143,7 +146,7 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 				}
 
 				Registry.register(
-						SeasonColorsRegistries.BLOCK_SEASON_COLORS_REGISTRY, itemId,
+						SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY, itemId,
 						itemBiomesSeasonColors
 				);
 			} catch (IOException | IllegalArgumentException e) {

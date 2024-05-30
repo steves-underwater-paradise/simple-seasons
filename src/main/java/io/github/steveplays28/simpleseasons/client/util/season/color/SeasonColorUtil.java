@@ -1,6 +1,6 @@
 package io.github.steveplays28.simpleseasons.client.util.season.color;
 
-import io.github.steveplays28.simpleseasons.client.registry.SeasonColorsRegistries;
+import io.github.steveplays28.simpleseasons.client.registry.SeasonColorRegistries;
 import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -16,7 +16,7 @@ public class SeasonColorUtil {
 
 	// TODO: Move into SimpleSeasonsClientApi
 	public static @NotNull Color getBlockSeasonColor(@NotNull Identifier blockIdentifier, @NotNull RegistryEntry<Biome> biomeRegistryEntry, SeasonTracker.@NotNull Seasons season, float seasonProgress, @NotNull Color fallbackSeasonColor) {
-		var blockBiomesSeasonColors = SeasonColorsRegistries.BLOCK_SEASON_COLORS_REGISTRY.get(blockIdentifier);
+		var blockBiomesSeasonColors = SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY.get(blockIdentifier);
 		if (blockBiomesSeasonColors == null) {
 			return fallbackSeasonColor;
 		}
@@ -53,7 +53,7 @@ public class SeasonColorUtil {
 	// TODO: Move into SimpleSeasonsClientApi
 	// TODO: Potentially add support for biomes and biome tags, instead of hardcoding minecraft:plains
 	public static @NotNull Color getItemSeasonColor(@NotNull Identifier itemIdentifier, SeasonTracker.@NotNull Seasons season, float seasonProgress, @NotNull Color fallbackSeasonColor) {
-		var itemBiomesSeasonColors = SeasonColorsRegistries.ITEM_SEASON_COLORS_REGISTRY.get(itemIdentifier);
+		var itemBiomesSeasonColors = SeasonColorRegistries.ITEM_SEASON_COLORS_REGISTRY.get(itemIdentifier);
 		if (itemBiomesSeasonColors == null) {
 			return fallbackSeasonColor;
 		}
