@@ -12,6 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,17 +40,11 @@ public class SimpleSeasons implements ModInitializer {
 		LOGGER.info("Loading {}.", MOD_NAME);
 
 		ServerLifecycleEvents.SERVER_STARTING.register(server -> SimpleSeasons.server = server);
-
-		// Register commands
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			for (var command : COMMANDS) {
-				dispatcher.register(command);
-			}
-		});
+		registerCommands();
 	}
 
 	// TODO: Move into SimpleSeasonsApi
-	public static SeasonTracker.Seasons getSeason() {
+	public static SeasonTracker.@NotNull Seasons getSeason() {
 		var simpleSeasonsState = SeasonState.getServerState(server);
 		return SeasonTracker.Seasons.of(simpleSeasonsState.season);
 	}
@@ -64,8 +59,20 @@ public class SimpleSeasons implements ModInitializer {
 		return SEASON_TRACKER.getSeasonProgress();
 	}
 
+	@Deprecated
 	@Contract(pure = true)
 	public static boolean isDryBiome(float temperature, float downfall) {
 		return temperature > 1.5f && downfall < 0.35f;
+	}
+
+	/**
+	 * Registers serverside commands.
+	 */
+	private void registerCommands() {
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			for (var command : COMMANDS) {
+				dispatcher.register(command);
+			}
+		});
 	}
 }
