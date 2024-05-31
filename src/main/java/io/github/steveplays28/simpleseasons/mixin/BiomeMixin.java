@@ -19,7 +19,7 @@ public abstract class BiomeMixin {
 			return;
 		}
 
-		if (SimpleSeasons.getSeason().getId() == SeasonTracker.Seasons.WINTER.ordinal()) {
+		if (SimpleSeasons.getSeason() == SeasonTracker.Seasons.WINTER) {
 			cir.setReturnValue(Biome.Precipitation.SNOW);
 		} else {
 			cir.setReturnValue(Biome.Precipitation.RAIN);
@@ -27,7 +27,7 @@ public abstract class BiomeMixin {
 	}
 
 	@Inject(method = "doesNotSnow", at = @At(value = "HEAD"), cancellable = true)
-	public void doesNotSnowInject(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-		cir.setReturnValue(SimpleSeasons.getSeason().getId() != SeasonTracker.Seasons.WINTER.ordinal());
+	public void doesNotSnowInject(@NotNull BlockPos blockPos, @NotNull CallbackInfoReturnable<Boolean> cir) {
+		cir.setReturnValue(SimpleSeasons.getSeason() != SeasonTracker.Seasons.WINTER);
 	}
 }

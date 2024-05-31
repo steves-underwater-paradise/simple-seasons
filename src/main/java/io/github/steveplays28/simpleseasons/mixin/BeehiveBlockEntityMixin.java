@@ -8,6 +8,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,8 +23,8 @@ public class BeehiveBlockEntityMixin extends BlockEntity {
 	}
 
 	@Inject(method = "tryReleaseBee", at = @At(value = "HEAD"))
-	private void simpleseasons$stopBeeReleaseInWinter(BlockState state, BeehiveBlockEntity.BeeState beeState, CallbackInfoReturnable<List<Entity>> cir) {
-		var world = getWorld();
+	private void simpleseasons$stopBeeReleaseInWinter(@NotNull BlockState blockState, @NotNull BeehiveBlockEntity.BeeState beeState, @NotNull CallbackInfoReturnable<List<Entity>> cir) {
+		var world = this.getWorld();
 		if (world == null) {
 			return;
 		}

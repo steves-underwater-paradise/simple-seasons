@@ -25,7 +25,7 @@ public class FreezeTopLayerFeatureMixin {
 			int i, int j, int k, int l, int m, @NotNull Biome biome
 	) {
 		cir.setReturnValue(
-				SimpleSeasonsApi.getSeason(structureWorldAccess.toServerWorld()).getId() != SeasonTracker.Seasons.WINTER.ordinal());
+				SimpleSeasonsApi.getSeason(structureWorldAccess.toServerWorld()) != SeasonTracker.Seasons.WINTER);
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/StructureWorldAccess;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 1), method = "generate", locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
@@ -36,6 +36,6 @@ public class FreezeTopLayerFeatureMixin {
 			int i, int j, int k, int l, int m, @NotNull Biome biome
 	) {
 		cir.setReturnValue(
-				SimpleSeasonsApi.getSeason(structureWorldAccess.toServerWorld()).getId() != SeasonTracker.Seasons.WINTER.ordinal());
+				SimpleSeasonsApi.getSeason(structureWorldAccess.toServerWorld()) != SeasonTracker.Seasons.WINTER);
 	}
 }

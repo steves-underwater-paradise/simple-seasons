@@ -14,7 +14,7 @@ public class SimpleSeasonsApi {
 	 * @param world The {@link World} to get the {@link SeasonTracker.Seasons} from.
 	 * @return The {@link SeasonTracker.Seasons} of the specified {@link World}.
 	 */
-	public static SeasonTracker.Seasons getSeason(@NotNull World world) {
+	public static SeasonTracker.@NotNull Seasons getSeason(@NotNull World world) {
 		if (world.isClient()) {
 			return SimpleSeasonsClient.seasonTracker.getSeason();
 		} else {
