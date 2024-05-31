@@ -16,9 +16,9 @@ public class SimpleSeasonsApi {
 	 */
 	public static SeasonTracker.@NotNull Seasons getSeason(@NotNull World world) {
 		if (world.isClient()) {
-			return SimpleSeasonsClient.seasonTracker.getSeason();
+			return SimpleSeasonsClient.SEASON_TRACKER.getSeason();
 		} else {
-			return SimpleSeasons.getSeason();
+			return SimpleSeasons.SEASON_TRACKER.getSeason();
 		}
 	}
 
@@ -31,9 +31,18 @@ public class SimpleSeasonsApi {
 	 */
 	public static float getSeasonProgress(@NotNull World world) {
 		if (world.isClient()) {
-			return SimpleSeasonsClient.seasonTracker.getSeasonProgress();
+			return SimpleSeasonsClient.SEASON_TRACKER.getSeasonProgress();
 		} else {
-			return SimpleSeasons.getSeasonProgress();
+			return SimpleSeasons.SEASON_TRACKER.getSeasonProgress();
 		}
+	}
+
+	public static void setSeason(@NotNull World world, SeasonTracker.@NotNull Seasons season) {
+		if (world.isClient()) {
+			throw new IllegalArgumentException(
+					"Passed in world argument is a client world, but the season can only be changed from the serverside.");
+		}
+
+		SimpleSeasons.SEASON_TRACKER.setSeason(season);
 	}
 }

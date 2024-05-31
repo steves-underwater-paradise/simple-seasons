@@ -13,6 +13,6 @@ import org.jetbrains.annotations.Nullable;
 public class SeasonClampedModelPredicateProvider implements ClampedModelPredicateProvider {
 	@Override
 	public float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
-		return SimpleSeasonsClient.seasonTracker.getSeason().getId();
+		return SimpleSeasonsClient.SEASON_TRACKER.getSeason().getId();
 	}
 }

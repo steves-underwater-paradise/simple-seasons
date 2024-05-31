@@ -27,7 +27,7 @@ import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
 
 @Environment(EnvType.CLIENT)
 public class SimpleSeasonsClient implements ClientModInitializer {
-	public static final SeasonTracker seasonTracker = new ClientSeasonTracker();
+	public static final SeasonTracker SEASON_TRACKER = new ClientSeasonTracker();
 
 	private MinecraftClient client;
 

@@ -91,7 +91,22 @@ public abstract class SeasonTracker {
 		return season;
 	}
 
+	public void setSeason(Seasons season) {
+		this.season = season;
+		this.seasonProgress.resetProgress();
+
+
+	}
+
 	public void setSeason(int seasonId) {
+		if (seasonId > SeasonTracker.Seasons.WINTER.ordinal() || seasonId < SeasonTracker.Seasons.SPRING.ordinal()) {
+			SimpleSeasons.LOGGER.error(
+					"Error occurred while setting the season: seasonId is out of bounds. The seasonId can only be between 0-3 (inclusive), given: {}.\n{}",
+					seasonId, new Exception().getStackTrace()
+			);
+			return;
+		}
+
 		this.season = Seasons.of(seasonId);
 		this.seasonProgress.resetProgress();
 	}
@@ -102,7 +117,7 @@ public abstract class SeasonTracker {
 			return;
 		}
 
-		setSeason(getSeason().getId() + 1);
+		setSeason(getSeason().getNext());
 	}
 
 	/**
