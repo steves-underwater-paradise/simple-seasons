@@ -1,7 +1,13 @@
 {
   "#minecraft:is_savanna": {
-    "SPRING": "#fcf04e",
-    "SUMMER": "#f7fc92",
+    "SPRING": "#f7fc92",
+    "SUMMER": "#fcf04e",
+    "FALL": "#8baa5c",
+    "WINTER": "#fc8e4e"
+  },
+  "#minecraft:is_jungle": {
+    "SPRING": "#f7fc92",
+    "SUMMER": "#fcf04e",
     "FALL": "#8baa5c",
     "WINTER": "#fc8e4e"
   },
