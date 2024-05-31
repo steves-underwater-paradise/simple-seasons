@@ -1,4 +1,4 @@
-package io.github.steveplays28.simpleseasons.command.season;
+package io.github.steveplays28.simpleseasons.server.command.season;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -14,7 +14,7 @@ import java.util.Locale;
 
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_NAMESPACE;
-import static io.github.steveplays28.simpleseasons.command.season.SeasonCommandCategory.seasonCommandCategory;
+import static io.github.steveplays28.simpleseasons.server.command.season.SeasonCommandCategory.seasonCommandCategory;
 
 public class SetSeasonCommand {
 	public static final String NAME = "set";

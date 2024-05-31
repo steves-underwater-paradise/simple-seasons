@@ -1,6 +1,6 @@
 package io.github.steveplays28.simpleseasons;
 
-import io.github.steveplays28.simpleseasons.command.CommandRegistry;
+import io.github.steveplays28.simpleseasons.server.command.CommandRegistry;
 import io.github.steveplays28.simpleseasons.server.state.ServerSeasonTracker;
 import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import net.fabricmc.api.ModInitializer;

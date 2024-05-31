@@ -1,7 +1,7 @@
-package io.github.steveplays28.simpleseasons.command;
+package io.github.steveplays28.simpleseasons.server.command;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import io.github.steveplays28.simpleseasons.command.season.SetSeasonCommand;
+import io.github.steveplays28.simpleseasons.server.command.season.SetSeasonCommand;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.ServerCommandSource;
 
