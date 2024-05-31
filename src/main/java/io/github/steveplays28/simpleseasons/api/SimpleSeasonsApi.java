@@ -37,6 +37,12 @@ public class SimpleSeasonsApi {
 		}
 	}
 
+	/**
+	 * Sets the {@link SeasonTracker.Seasons} of the specified {@link World}.
+	 *
+	 * @param world  The {@link World} to set the {@link SeasonTracker.Seasons} in.
+	 * @param season The {@link SeasonTracker.Seasons} that should be set in the specified {@link World}.
+	 */
 	public static void setSeason(@NotNull World world, SeasonTracker.@NotNull Seasons season) {
 		if (world.isClient()) {
 			throw new IllegalArgumentException(
