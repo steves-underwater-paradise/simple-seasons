@@ -4,7 +4,6 @@ import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IceBlock;
-import net.minecraft.block.SnowBlock;
 import net.minecraft.block.TransparentBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
