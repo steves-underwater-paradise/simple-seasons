@@ -1,4 +1,4 @@
-package io.github.steveplays28.simpleseasons.mixin;
+package io.github.steveplays28.simpleseasons.mixin.block.entity;
 
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;

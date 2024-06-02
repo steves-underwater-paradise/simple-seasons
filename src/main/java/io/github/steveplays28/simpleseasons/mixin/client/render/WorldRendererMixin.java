@@ -25,7 +25,7 @@ public abstract class WorldRendererMixin {
 	@WrapOperation(method = {"renderWeather", "tickRainSplashing"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;"))
 	private @NotNull Biome.Precipitation simple_seasons$getSeasonPrecipitation(@NotNull Biome biome, @NotNull BlockPos blockPos, @NotNull Operation<Biome.Precipitation> originalMethod) {
 		if (world == null || !SimpleSeasonsApi.worldHasSeasons(world) || SimpleSeasonsApi.getSeason(world) != SeasonTracker.Seasons.WINTER) {
-			return originalMethod.call(blockPos);
+			return originalMethod.call(biome, blockPos);
 		}
 
 		return Biome.Precipitation.SNOW;

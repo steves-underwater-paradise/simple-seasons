@@ -17,7 +17,7 @@ public abstract class WorldMixin {
 	private @NotNull Biome.Precipitation simple_seasons$getSeasonPrecipitation(@NotNull Biome biome, @NotNull BlockPos blockPos, @NotNull Operation<Biome.Precipitation> originalMethod) {
 		var castedWorld = (World) (Object) this;
 		if (!SimpleSeasonsApi.worldHasSeasons(castedWorld) || SimpleSeasonsApi.getSeason(castedWorld) != SeasonTracker.Seasons.WINTER) {
-			return originalMethod.call(blockPos);
+			return originalMethod.call(biome, blockPos);
 		}
 
 		return Biome.Precipitation.SNOW;
