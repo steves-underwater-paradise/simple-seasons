@@ -1,13 +1,19 @@
 package io.github.steveplays28.simpleseasons.api;
 
-import io.github.steveplays28.simpleseasons.state.SeasonTracker;
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient;
+import io.github.steveplays28.simpleseasons.server.api.world.registry.state.ServerWorldSeasonTrackerRegistry;
+import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public class SimpleSeasonsApi {
+	public static boolean worldHasSeasons(@NotNull World world) {
+		return !world.getDimension().hasFixedTime();
+	}
+
 	/**
 	 * Gets the {@link SeasonTracker.Seasons} of the specified {@link World}.
 	 *
@@ -17,9 +23,17 @@ public class SimpleSeasonsApi {
 	public static SeasonTracker.@NotNull Seasons getSeason(@NotNull World world) {
 		if (world.isClient()) {
 			return SimpleSeasonsClient.SEASON_TRACKER.getSeason();
-		} else {
-			return SimpleSeasons.SEASON_TRACKER.getSeason();
 		}
+
+		@Nullable var seasonTracker = ServerWorldSeasonTrackerRegistry.get(world.getRegistryKey().getValue());
+		if (seasonTracker == null) {
+			SimpleSeasons.LOGGER.error(
+					"Error occurred while getting the season of world {}: the world does not have a registered season tracker.\n{}",
+					world, new Exception().getStackTrace()
+			);
+			return SeasonTracker.Seasons.of(0);
+		}
+		return seasonTracker.getSeason();
 	}
 
 	/**
@@ -32,9 +46,17 @@ public class SimpleSeasonsApi {
 	public static float getSeasonProgress(@NotNull World world) {
 		if (world.isClient()) {
 			return SimpleSeasonsClient.SEASON_TRACKER.getSeasonProgress();
-		} else {
-			return SimpleSeasons.SEASON_TRACKER.getSeasonProgress();
 		}
+
+		@Nullable var seasonTracker = ServerWorldSeasonTrackerRegistry.get(world.getRegistryKey().getValue());
+		if (seasonTracker == null) {
+			SimpleSeasons.LOGGER.error(
+					"Error occurred while getting the season progress of world {}: the world does not have a registered season tracker.\n{}",
+					world, new Exception().getStackTrace()
+			);
+			return 0f;
+		}
+		return seasonTracker.getSeasonProgress();
 	}
 
 	/**
@@ -49,6 +71,15 @@ public class SimpleSeasonsApi {
 					"Passed in world argument is a client world, but the season can only be changed from the serverside.");
 		}
 
-		SimpleSeasons.SEASON_TRACKER.setSeason(season);
+		@Nullable var seasonTracker = ServerWorldSeasonTrackerRegistry.get(world.getRegistryKey().getValue());
+		if (seasonTracker == null) {
+			SimpleSeasons.LOGGER.error(
+					"Error occurred while setting the season of world {}: the world does not have a registered season tracker.\n{}",
+					world, new Exception().getStackTrace()
+			);
+			return;
+		}
+
+		seasonTracker.setSeason(season);
 	}
 }

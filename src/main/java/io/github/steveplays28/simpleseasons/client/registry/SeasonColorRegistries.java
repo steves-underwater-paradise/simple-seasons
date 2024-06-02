@@ -1,6 +1,6 @@
 package io.github.steveplays28.simpleseasons.client.registry;
 
-import io.github.steveplays28.simpleseasons.state.SeasonTracker;
+import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

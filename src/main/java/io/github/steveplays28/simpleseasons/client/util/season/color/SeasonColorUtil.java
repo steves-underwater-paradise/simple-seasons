@@ -1,7 +1,7 @@
 package io.github.steveplays28.simpleseasons.client.util.season.color;
 
 import io.github.steveplays28.simpleseasons.client.registry.SeasonColorRegistries;
-import io.github.steveplays28.simpleseasons.state.SeasonTracker;
+import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.BiomeTags;

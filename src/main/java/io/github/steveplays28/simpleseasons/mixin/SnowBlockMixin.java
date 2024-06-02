@@ -1,7 +1,7 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
-import io.github.steveplays28.simpleseasons.state.SeasonTracker;
+import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SnowBlock;
 import net.minecraft.server.world.ServerWorld;
@@ -17,8 +17,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SnowBlockMixin {
 	@Inject(method = "randomTick", at = @At(value = "HEAD"))
 	public void randomTickInject(@NotNull BlockState blockState, @NotNull ServerWorld serverWorld, @NotNull BlockPos blockPos, @NotNull Random random, @NotNull CallbackInfo ci) {
-		if (SimpleSeasonsApi.getSeason(serverWorld) != SeasonTracker.Seasons.WINTER) {
-			serverWorld.removeBlock(blockPos, false);
+		if (!SimpleSeasonsApi.worldHasSeasons(serverWorld) || SimpleSeasonsApi.getSeason(serverWorld) == SeasonTracker.Seasons.WINTER) {
+			return;
 		}
+
+		serverWorld.removeBlock(blockPos, false);
 	}
 }

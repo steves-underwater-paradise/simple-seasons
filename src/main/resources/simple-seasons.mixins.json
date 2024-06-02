@@ -7,13 +7,16 @@
     "BeehiveBlockEntityMixin",
     "BiomeMixin",
     "FreezeTopLayerFeatureMixin",
-    "SnowBlockMixin"
+    "SnowBlockMixin",
+    "server.world.ServerWorldMixin",
+    "world.WorldMixin"
   ],
   "client": [
     "client.BiomeColorsMixin",
     "client.BlockColorsMixin",
     "client.accessor.ChunkRendererRegionAccessor",
-    "client.accessor.WorldRendererAccessor"
+    "client.accessor.WorldRendererAccessor",
+    "client.render.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

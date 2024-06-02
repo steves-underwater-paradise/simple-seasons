@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
-import io.github.steveplays28.simpleseasons.state.SeasonTracker;
+import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;

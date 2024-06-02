@@ -1,6 +1,5 @@
-package io.github.steveplays28.simpleseasons.state;
+package io.github.steveplays28.simpleseasons.state.world;
 
-// TODO: Smooth season color transitions
 public class SeasonProgress {
 	private float progress = 0f;
 

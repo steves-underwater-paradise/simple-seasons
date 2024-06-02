@@ -1,7 +1,7 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
-import io.github.steveplays28.simpleseasons.state.SeasonTracker;
+import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.biome.Biome;
@@ -24,8 +24,12 @@ public class FreezeTopLayerFeatureMixin {
 			@NotNull BlockPos.Mutable mutable, @NotNull BlockPos.Mutable mutable2,
 			int i, int j, int k, int l, int m, @NotNull Biome biome
 	) {
-		cir.setReturnValue(
-				SimpleSeasonsApi.getSeason(structureWorldAccess.toServerWorld()) != SeasonTracker.Seasons.WINTER);
+		var serverWorld = structureWorldAccess.toServerWorld();
+		if (!SimpleSeasonsApi.worldHasSeasons(serverWorld)) {
+			return;
+		}
+
+		cir.setReturnValue(SimpleSeasonsApi.getSeason(serverWorld) != SeasonTracker.Seasons.WINTER);
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/StructureWorldAccess;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 1), method = "generate", locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
@@ -35,7 +39,11 @@ public class FreezeTopLayerFeatureMixin {
 			@NotNull BlockPos.Mutable mutable, @NotNull BlockPos.Mutable mutable2,
 			int i, int j, int k, int l, int m, @NotNull Biome biome
 	) {
-		cir.setReturnValue(
-				SimpleSeasonsApi.getSeason(structureWorldAccess.toServerWorld()) != SeasonTracker.Seasons.WINTER);
+		var serverWorld = structureWorldAccess.toServerWorld();
+		if (!SimpleSeasonsApi.worldHasSeasons(serverWorld)) {
+			return;
+		}
+
+		cir.setReturnValue(SimpleSeasonsApi.getSeason(serverWorld) != SeasonTracker.Seasons.WINTER);
 	}
 }

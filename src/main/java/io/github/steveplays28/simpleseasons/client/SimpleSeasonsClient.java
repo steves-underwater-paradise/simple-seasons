@@ -4,9 +4,9 @@ import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.client.api.BlockColorProviderRegistry;
 import io.github.steveplays28.simpleseasons.client.model.SeasonClampedModelPredicateProvider;
 import io.github.steveplays28.simpleseasons.client.resource.SimpleSeasonsResourceReloadListener;
-import io.github.steveplays28.simpleseasons.client.state.ClientSeasonTracker;
+import io.github.steveplays28.simpleseasons.client.state.world.ClientSeasonTracker;
 import io.github.steveplays28.simpleseasons.client.util.season.color.SeasonColorUtil;
-import io.github.steveplays28.simpleseasons.state.SeasonTracker;
+import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,10 +37,8 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 
 		// Register vanilla block color providers using the API
 		registerVanillaColorProviders();
-
 		// Register season model predicate provider
 		ModelPredicateProviderRegistry.register(new Identifier(MOD_ID, "season"), new SeasonClampedModelPredicateProvider());
-
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSeasonsResourceReloadListener());
 	}
 

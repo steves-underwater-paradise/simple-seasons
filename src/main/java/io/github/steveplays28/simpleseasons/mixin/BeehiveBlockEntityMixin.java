@@ -1,6 +1,6 @@
 package io.github.steveplays28.simpleseasons.mixin;
 
-import io.github.steveplays28.simpleseasons.state.SeasonTracker;
+import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BeehiveBlockEntity;
@@ -25,7 +25,7 @@ public class BeehiveBlockEntityMixin extends BlockEntity {
 	@Inject(method = "tryReleaseBee", at = @At(value = "HEAD"))
 	private void simpleseasons$stopBeeReleaseInWinter(@NotNull BlockState blockState, @NotNull BeehiveBlockEntity.BeeState beeState, @NotNull CallbackInfoReturnable<List<Entity>> cir) {
 		var world = this.getWorld();
-		if (world == null) {
+		if (world == null || !SimpleSeasonsApi.worldHasSeasons(world)) {
 			return;
 		}
 

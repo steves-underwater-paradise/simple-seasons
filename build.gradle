@@ -38,8 +38,11 @@ dependencies {
     modRuntimeOnly "maven.modrinth:modmenu:${project.modmenu_version}"
     modRuntimeOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    // Mixin Extras
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixin_extras_version}")))
+
+    // Fabric API
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     // Fabric Permissions API
     include(modImplementation("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}"))

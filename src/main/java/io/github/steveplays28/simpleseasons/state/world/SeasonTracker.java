@@ -1,12 +1,10 @@
-package io.github.steveplays28.simpleseasons.state;
+package io.github.steveplays28.simpleseasons.state.world;
 
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import org.jetbrains.annotations.NotNull;
 
-// TODO: Make SeasonTracker be per world
-
 /**
- * Tracks the season state of a world. Self-contained.
+ * Tracks the season state.
  */
 public abstract class SeasonTracker {
 	private final @NotNull SeasonProgress seasonProgress = new SeasonProgress();
@@ -94,8 +92,6 @@ public abstract class SeasonTracker {
 	public void setSeason(Seasons season) {
 		this.season = season;
 		this.seasonProgress.resetProgress();
-
-
 	}
 
 	public void setSeason(int seasonId) {

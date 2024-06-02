@@ -1,7 +1,7 @@
-package io.github.steveplays28.simpleseasons.client.state;
+package io.github.steveplays28.simpleseasons.client.state.world;
 
 import io.github.steveplays28.simpleseasons.client.util.rendering.RenderingUtil;
-import io.github.steveplays28.simpleseasons.state.SeasonTracker;
+import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -20,6 +20,7 @@ public class ClientSeasonTracker extends SeasonTracker {
 
 	public ClientSeasonTracker() {
 		super();
+
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> this.client = client);
 		ClientPlayNetworking.registerGlobalReceiver(SEASON_PACKET_CHANNEL, this::onSeasonStatePacketReceived);
 	}
