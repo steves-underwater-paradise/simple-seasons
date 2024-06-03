@@ -1,0 +1,8 @@
+{
+  "#minecraft:is_overworld": {
+    "SPRING": "#f7fc92",
+    "SUMMER": "#fcf04e",
+    "FALL": "#8baa5c",
+    "WINTER": "#fc8e4e"
+  }
+}
