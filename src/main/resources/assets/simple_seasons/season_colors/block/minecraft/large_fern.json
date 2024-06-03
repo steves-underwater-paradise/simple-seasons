@@ -11,6 +11,12 @@
     "FALL": "#8baa5c",
     "WINTER": "#fc8e4e"
   },
+  "#c:swamp": {
+    "SPRING": "#92b74e",
+    "SUMMER": "#a3ba3f",
+    "FALL": "#e9997e",
+    "WINTER": "#f2f4fc"
+  },
   "#minecraft:is_overworld": {
     "SPRING": "#d7fc1b",
     "SUMMER": "#edf736",
