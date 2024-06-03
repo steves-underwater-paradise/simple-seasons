@@ -17,7 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SnowBlockMixin {
 	@Inject(method = "randomTick", at = @At(value = "HEAD"), cancellable = true)
 	public void randomTickInject(@NotNull BlockState blockState, @NotNull ServerWorld serverWorld, @NotNull BlockPos blockPos, @NotNull Random random, @NotNull CallbackInfo ci) {
-		if (!SimpleSeasonsApi.worldHasSeasons(serverWorld)) {
+		@NotNull var biome = serverWorld.getBiome(blockPos);
+		if (!SimpleSeasonsApi.worldHasSeasons(serverWorld) || SimpleSeasonsApi.biomeHasWetAndDrySeasons(biome)) {
 			return;
 		}
 

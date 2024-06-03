@@ -2,16 +2,37 @@ package io.github.steveplays28.simpleseasons.api;
 
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient;
+import io.github.steveplays28.simpleseasons.registry.tag.biome.SimpleSeasonsBiomeTags;
 import io.github.steveplays28.simpleseasons.server.api.world.registry.state.ServerWorldSeasonTrackerRegistry;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public class SimpleSeasonsApi {
+	/**
+	 * Checks if the specified {@link World} has seasons.
+	 * Any worlds with unfixed time will have seasons.
+	 *
+	 * @param world The {@link World} to check.
+	 * @return If the specified {@link World} has seasons.
+	 */
 	public static boolean worldHasSeasons(@NotNull World world) {
 		return !world.getDimension().hasFixedTime();
+	}
+
+	/**
+	 * Checks if the specified {@link Biome} has wet and dry seasons.
+	 * This is done by checking if the specified {@link Biome} is in the biome tag {@code simple_seasons:has_wet_and_dry_seasons}.
+	 *
+	 * @param biome The {@link Biome} to check for wet and dry seasons.
+	 * @return If the specified {@link Biome} has wet and dry seasons.
+	 */
+	public static boolean biomeHasWetAndDrySeasons(@NotNull RegistryEntry<Biome> biome) {
+		return biome.isIn(SimpleSeasonsBiomeTags.HAS_WET_AND_DRY_SEASONS);
 	}
 
 	/**
