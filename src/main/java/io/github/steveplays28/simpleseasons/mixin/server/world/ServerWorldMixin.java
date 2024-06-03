@@ -6,6 +6,7 @@ import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +32,20 @@ public abstract class ServerWorldMixin extends World {
 
 	@WrapOperation(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;"))
 	private @NotNull Biome.Precipitation simple_seasons$getSeasonPrecipitation(@NotNull Biome biome, @NotNull BlockPos blockPos, @NotNull Operation<Biome.Precipitation> originalMethod) {
-		if (!SimpleSeasonsApi.worldHasSeasons(this) || SimpleSeasonsApi.getSeason(this) != SeasonTracker.Seasons.WINTER) {
+		if (!SimpleSeasonsApi.worldHasSeasons(this)) {
+			return originalMethod.call(biome, blockPos);
+		}
+
+		@NotNull var season = SimpleSeasonsApi.getSeason(this);
+		if (SimpleSeasonsApi.biomeHasWetAndDrySeasons(this.getRegistryManager().get(RegistryKeys.BIOME).getEntry(biome))) {
+			if (season == SeasonTracker.Seasons.SPRING || season == SeasonTracker.Seasons.SUMMER) {
+				return Biome.Precipitation.RAIN;
+			}
+
+			return Biome.Precipitation.NONE;
+		}
+
+		if (season != SeasonTracker.Seasons.WINTER) {
 			return originalMethod.call(biome, blockPos);
 		}
 

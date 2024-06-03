@@ -5,9 +5,9 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
-import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
+import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_NAMESPACE;
 
 public class SimpleSeasonsBiomeTags {
 	public static final TagKey<Biome> HAS_WET_AND_DRY_SEASONS = TagKey.of(
-			RegistryKeys.BIOME, new Identifier(MOD_ID, "has_wet_and_dry_seasons"));
+			RegistryKeys.BIOME, new Identifier(MOD_NAMESPACE, "has_wet_and_dry_seasons"));
 }

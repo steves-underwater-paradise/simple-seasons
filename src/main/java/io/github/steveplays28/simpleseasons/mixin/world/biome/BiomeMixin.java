@@ -26,6 +26,7 @@ public abstract class BiomeMixin {
 		if (!(worldView instanceof @NotNull World world) || !SimpleSeasonsApi.worldHasSeasons(
 				world) || !this.hasPrecipitation() || SimpleSeasonsApi.biomeHasWetAndDrySeasons(
 				world.getBiome(blockPos)) || !Blocks.SNOW.getDefaultState().canPlaceAt(world, blockPos)) {
+			cir.setReturnValue(false);
 			return;
 		}
 
@@ -37,6 +38,7 @@ public abstract class BiomeMixin {
 		if (!(worldView instanceof @NotNull World world) || !SimpleSeasonsApi.worldHasSeasons(
 				world) || SimpleSeasonsApi.biomeHasWetAndDrySeasons(world.getBiome(blockPos)) || world.getLightLevel(
 				LightType.BLOCK, blockPos) >= 10 || doWaterCheck && !world.getFluidState(blockPos).isOf(Fluids.WATER)) {
+			cir.setReturnValue(false);
 			return;
 		}
 
