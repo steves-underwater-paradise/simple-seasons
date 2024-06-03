@@ -2,13 +2,21 @@ package io.github.steveplays28.simpleseasons.client.resource;
 
 import com.google.gson.JsonParser;
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
+import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.client.registry.SeasonColorRegistries;
+import io.github.steveplays28.simpleseasons.client.util.season.color.SeasonColorUtil;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import io.github.steveplays28.simpleseasons.util.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.color.world.BiomeColors;
+import net.minecraft.client.color.world.FoliageColors;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
@@ -41,8 +49,8 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 	@Override
 	public CompletableFuture<Void> load(@NotNull ResourceManager resourceManager, @NotNull Profiler profiler, @NotNull Executor executor) {
 		return CompletableFuture.runAsync(() -> {
-			loadBlockSeasonColors(resourceManager);
-			loadItemSeasonColors(resourceManager);
+			loadSeasonColors(resourceManager, BLOCK_FOLDER_NAME, SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY);
+			loadSeasonColors(resourceManager, ITEM_FOLDER_NAME, SeasonColorRegistries.ITEM_SEASON_COLORS_REGISTRY);
 		});
 	}
 
@@ -68,30 +76,30 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 		return new Identifier(String.format(MOD_ID), "resource_reload_listener");
 	}
 
-	private void loadBlockSeasonColors(@NotNull ResourceManager resourceManager) {
+	private void loadSeasonColors(@NotNull ResourceManager resourceManager, @NotNull String folderName, @NotNull SimpleRegistry<@NotNull Map<@NotNull Identifier, @NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color>>> registry) {
 		var dataPackJsonFiles = resourceManager.findResources(
-				String.format("%s/%s", SEASON_COLORS_FOLDER_NAME, BLOCK_FOLDER_NAME),
+				String.format("%s/%s", SEASON_COLORS_FOLDER_NAME, folderName),
 				identifier -> identifier.toString().endsWith(JSON_FILE_SUFFIX)
 		);
 
 		for (var dataPackJsonFile : dataPackJsonFiles.entrySet()) {
 			var splitDataPackJsonFilePath = dataPackJsonFile.getKey().getPath().replace(".json", "").split("/");
-			var blockId = new Identifier(
+			var identifier = new Identifier(
 					splitDataPackJsonFilePath[splitDataPackJsonFilePath.length - 2],
 					splitDataPackJsonFilePath[splitDataPackJsonFilePath.length - 1]
 			);
-			if (SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY.containsId(blockId)) {
+			if (registry.containsId(identifier)) {
 				continue;
 			}
 
 			try {
 				var dataPackJson = JsonParser.parseReader(dataPackJsonFile.getValue().getReader()).getAsJsonObject();
 				var dataPackJsonBiomesSeasonColors = dataPackJson.asMap();
-				@NotNull Map<@NotNull Identifier, @NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color>> blockBiomesSeasonColors = new HashMap<>();
+				@NotNull Map<@NotNull Identifier, @NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color>> biomesSeasonColors = new HashMap<>();
 				for (var dataPackJsonBiomesSeasonColor : dataPackJsonBiomesSeasonColors.entrySet()) {
-					@NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color> blockSeasonColors = new HashMap<>();
+					@NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color> seasonColors = new HashMap<>();
 					for (var dataPackJsonSeasonColor : dataPackJsonBiomesSeasonColor.getValue().getAsJsonObject().entrySet()) {
-						blockSeasonColors.put(
+						seasonColors.put(
 								SeasonTracker.Seasons.parse(dataPackJsonSeasonColor.getKey()),
 								Color.parse(dataPackJsonSeasonColor.getValue().getAsString())
 						);
@@ -104,54 +112,48 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 						biomeKey = biomeKey.substring(1);
 					}
 
-					blockBiomesSeasonColors.put(new Identifier(biomeKey), blockSeasonColors);
+					biomesSeasonColors.put(new Identifier(biomeKey), seasonColors);
 				}
 
-				Registry.register(
-						SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY, blockId,
-						blockBiomesSeasonColors
-				);
+				Registry.register(registry, identifier, biomesSeasonColors);
+				if (folderName.equals(BLOCK_FOLDER_NAME)) {
+					registerBlockColorProvider(identifier);
+				} else if (folderName.equals(ITEM_FOLDER_NAME)) {
+					registerItemColorProvider(identifier);
+				}
 			} catch (IOException | IllegalArgumentException e) {
-				SimpleSeasons.LOGGER.error("Exception thrown while reading a datapack JSON file:\n", e);
+				SimpleSeasons.LOGGER.error("Exception thrown while reading a resource pack JSON file:\n", e);
 			}
 		}
 	}
 
-	private void loadItemSeasonColors(@NotNull ResourceManager resourceManager) {
-		var dataPackJsonFiles = resourceManager.findResources(
-				String.format("%s/%s", SEASON_COLORS_FOLDER_NAME, ITEM_FOLDER_NAME),
-				identifier -> identifier.toString().endsWith(JSON_FILE_SUFFIX)
-		);
-
-		for (var dataPackJsonFile : dataPackJsonFiles.entrySet()) {
-			var itemId = dataPackJsonFile.getKey();
-			if (SeasonColorRegistries.ITEM_SEASON_COLORS_REGISTRY.containsId(itemId)) {
-				continue;
+	private void registerBlockColorProvider(Identifier blockIdentifier) {
+		ColorProviderRegistry.BLOCK.register((blockState, world, blockPos, tintIndex) -> {
+			if (world == null || blockPos == null) {
+				return FoliageColors.getDefaultColor();
 			}
 
-			try {
-				var dataPackJson = JsonParser.parseReader(dataPackJsonFile.getValue().getReader()).getAsJsonObject();
-				var dataPackJsonBiomesSeasonColors = dataPackJson.asMap();
-				@NotNull Map<@NotNull Identifier, @NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color>> itemBiomesSeasonColors = new HashMap<>();
-				for (var dataPackJsonBiomesSeasonColor : dataPackJsonBiomesSeasonColors.entrySet()) {
-					@NotNull Map<SeasonTracker.@NotNull Seasons, @NotNull Color> itemSeasonColors = new HashMap<>();
-					for (var dataPackJsonSeasonColor : dataPackJsonBiomesSeasonColor.getValue().getAsJsonObject().entrySet()) {
-						itemSeasonColors.put(
-								SeasonTracker.Seasons.parse(dataPackJsonSeasonColor.getKey()),
-								Color.parse(dataPackJsonSeasonColor.getValue().getAsString())
-						);
-					}
+			return BiomeColors.getFoliageColor(world, blockPos);
+		}, Registries.BLOCK.get(blockIdentifier));
+	}
 
-					itemBiomesSeasonColors.put(new Identifier(dataPackJsonBiomesSeasonColor.getKey()), itemSeasonColors);
-				}
-
-				Registry.register(
-						SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY, itemId,
-						itemBiomesSeasonColors
-				);
-			} catch (IOException | IllegalArgumentException e) {
-				SimpleSeasons.LOGGER.error("Exception thrown while reading a datapack JSON file:\n", e);
+	private void registerItemColorProvider(Identifier itemIdentifier) {
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+			var client = MinecraftClient.getInstance();
+			if (client.world == null || client.player == null) {
+				throw new IllegalStateException(
+						"Error occurred while registering item color providers: client.world == null || client.player == null.");
 			}
-		}
+
+			var itemSeasonColor = SeasonColorUtil.getItemSeasonColor(Registries.ITEM.getId(stack.getItem()),
+					client.world.getBiome(client.player.getBlockPos()),
+					SimpleSeasonsApi.getSeason(client.world), SimpleSeasonsApi.getSeasonProgress(client.world)
+			);
+			if (itemSeasonColor == null) {
+				return FoliageColors.getDefaultColor();
+			}
+
+			return itemSeasonColor.toInt();
+		}, Registries.BLOCK.get(itemIdentifier));
 	}
 }
