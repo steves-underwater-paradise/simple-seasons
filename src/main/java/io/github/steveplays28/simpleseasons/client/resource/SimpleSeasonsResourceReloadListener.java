@@ -37,6 +37,8 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 	private static final String BLOCK_FOLDER_NAME = "block";
 	private static final String ITEM_FOLDER_NAME = "item";
 
+	private static boolean isFirstLoad = true;
+
 	/**
 	 * Asynchronously process and load resource-based data. The code
 	 * must be thread-safe and not modify game state!
@@ -51,6 +53,7 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 		return CompletableFuture.runAsync(() -> {
 			loadSeasonColors(resourceManager, BLOCK_FOLDER_NAME, SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY);
 			loadSeasonColors(resourceManager, ITEM_FOLDER_NAME, SeasonColorRegistries.ITEM_SEASON_COLORS_REGISTRY);
+			isFirstLoad = false;
 		});
 	}
 
@@ -90,6 +93,11 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 			);
 			if (registry.containsId(identifier)) {
 				continue;
+			}
+			if (!isFirstLoad) {
+				SimpleSeasons.LOGGER.info(
+						"Detected changes to season colors, please restart your game for the changes to take effect (cannot modify frozen registries).");
+				return;
 			}
 
 			try {
