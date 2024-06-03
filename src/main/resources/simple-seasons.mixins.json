@@ -4,19 +4,20 @@
   "package": "io.github.steveplays28.simpleseasons.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "block.entity.BeehiveBlockEntityMixin",
-    "world.biome.BiomeMixin",
-    "world.gen.feature.FreezeTopLayerFeatureMixin",
     "block.IceBlockMixin",
     "block.SnowBlockMixin",
+    "block.entity.BeehiveBlockEntityMixin",
     "server.world.ServerWorldMixin",
-    "world.WorldMixin"
+    "world.WorldMixin",
+    "world.biome.BiomeMixin",
+    "world.gen.feature.FreezeTopLayerFeatureMixin"
   ],
   "client": [
-    "client.BiomeColorsMixin",
     "client.accessor.ChunkRendererRegionAccessor",
     "client.accessor.WorldRendererAccessor",
-    "client.render.WorldRendererMixin"
+    "client.color.world.BiomeColorsMixin",
+    "client.render.WorldRendererMixin",
+    "client.world.ClientWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1
