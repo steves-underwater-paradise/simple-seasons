@@ -17,9 +17,20 @@ public abstract class WorldMixin {
 	@WrapOperation(method = "hasRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;"))
 	private @NotNull Biome.Precipitation simple_seasons$getSeasonPrecipitation(@NotNull Biome biome, @NotNull BlockPos blockPos, @NotNull Operation<Biome.Precipitation> originalMethod) {
 		@NotNull var castedWorld = (World) (Object) this;
-		if (!SimpleSeasonsApi.worldHasSeasons(castedWorld) || SimpleSeasonsApi.biomeHasWetAndDrySeasons(
-				castedWorld.getRegistryManager().get(RegistryKeys.BIOME).getEntry(biome)) || SimpleSeasonsApi.getSeason(
-				castedWorld) != SeasonTracker.Seasons.WINTER) {
+		if (!SimpleSeasonsApi.worldHasSeasons(castedWorld)) {
+			return originalMethod.call(biome, blockPos);
+		}
+
+		@NotNull var season = SimpleSeasonsApi.getSeason(castedWorld);
+		if (SimpleSeasonsApi.biomeHasWetAndDrySeasons(castedWorld.getRegistryManager().get(RegistryKeys.BIOME).getEntry(biome))) {
+			if (season == SeasonTracker.Seasons.SPRING || season == SeasonTracker.Seasons.SUMMER) {
+				return Biome.Precipitation.RAIN;
+			}
+
+			return Biome.Precipitation.NONE;
+		}
+
+		if (season != SeasonTracker.Seasons.WINTER) {
 			return originalMethod.call(biome, blockPos);
 		}
 
