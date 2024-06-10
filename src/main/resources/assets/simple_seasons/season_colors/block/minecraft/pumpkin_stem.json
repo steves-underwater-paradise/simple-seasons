@@ -3,13 +3,13 @@
     "SPRING": "#f7fc92",
     "SUMMER": "#fcf04e",
     "FALL": "#8baa5c",
-    "WINTER": "#fc8e4e"
+    "WINTER": "#a58f2c"
   },
   "#minecraft:is_jungle": {
     "SPRING": "#f7fc92",
     "SUMMER": "#fcf04e",
     "FALL": "#8baa5c",
-    "WINTER": "#fc8e4e"
+    "WINTER": "#a58f2c"
   },
   "#c:swamp": {
     "SPRING": "#92b74e",

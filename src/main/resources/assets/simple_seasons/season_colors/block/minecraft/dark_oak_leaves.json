@@ -1,0 +1,20 @@
+{
+  "#minecraft:is_savanna": {
+    "SPRING": "#e3e886",
+    "SUMMER": "#ede249",
+    "FALL": "#7e9b53",
+    "WINTER": "#bc6a3a"
+  },
+  "#minecraft:is_jungle": {
+    "SPRING": "#e3e886",
+    "SUMMER": "#ede249",
+    "FALL": "#7e9b53",
+    "WINTER": "#bc6a3a"
+  },
+  "#minecraft:is_overworld": {
+    "SPRING": "#809612",
+    "SUMMER": "#7d821f",
+    "FALL": "#af8936",
+    "WINTER": "#f2f1ef"
+  }
+}
