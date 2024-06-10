@@ -3,6 +3,7 @@ package io.github.steveplays28.simpleseasons.client.resource;
 import com.google.gson.JsonParser;
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
+import io.github.steveplays28.simpleseasons.client.extension.world.ClientWorldExtension;
 import io.github.steveplays28.simpleseasons.client.registry.SeasonColorRegistries;
 import io.github.steveplays28.simpleseasons.client.util.season.color.SeasonColorUtil;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
@@ -12,15 +13,16 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -136,24 +138,64 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 	}
 
 	private void registerBlockColorProvider(Identifier blockIdentifier) {
-		ColorProviderRegistry.BLOCK.register((blockState, world, blockPos, tintIndex) -> {
-			if (world == null || blockPos == null) {
+		ColorProviderRegistry.BLOCK.register((blockState, blockRenderView, startBlockPos, tintIndex) -> {
+			@NotNull var client = MinecraftClient.getInstance();
+			@Nullable var clientWorld = client.world;
+			if (clientWorld == null || startBlockPos == null) {
 				return FoliageColors.getDefaultColor();
 			}
 
-			return BiomeColors.getFoliageColor(world, blockPos);
+			@NotNull var blockPosColorCache = ((ClientWorldExtension) clientWorld).simple_seasons$getColorCache().blockPosColorCache;
+			@Nullable var cachedStartBlockSeasonColor = blockPosColorCache.get(startBlockPos);
+			if (cachedStartBlockSeasonColor != null) {
+				return cachedStartBlockSeasonColor.toInt();
+			}
+
+			var biomeBlendedBlockSeasonColor = clientWorld.calculateColor(startBlockPos, (biome, x, z) -> {
+				@NotNull var blockPos = new BlockPos((int) Math.round(x), startBlockPos.getY(), (int) Math.round(z));
+				// Nullable due to concurrency
+				@Nullable var cachedBlockSeasonColor = blockPosColorCache.get(blockPos);
+				if (cachedBlockSeasonColor != null) {
+					return cachedBlockSeasonColor.toInt();
+				}
+
+				@Nullable var blockSeasonColor = SeasonColorUtil.getBlockSeasonColor(
+						Registries.BLOCK.getId(clientWorld.getBlockState(blockPos).getBlock()),
+						clientWorld.getBiome(blockPos),
+						SimpleSeasonsApi.getSeason(clientWorld),
+						SimpleSeasonsApi.getSeasonProgress(clientWorld)
+				);
+				if (blockSeasonColor != null) {
+					return blockSeasonColor.toInt();
+				}
+
+				@Nullable var startBlockSeasonColor = SeasonColorUtil.getBlockSeasonColor(
+						Registries.BLOCK.getId(clientWorld.getBlockState(startBlockPos).getBlock()),
+						clientWorld.getBiome(startBlockPos),
+						SimpleSeasonsApi.getSeason(clientWorld),
+						SimpleSeasonsApi.getSeasonProgress(clientWorld)
+				);
+				if (startBlockSeasonColor == null) {
+					return SeasonColorUtil.FALLBACK_SEASON_COLOR_PRECALCULATED;
+				}
+
+				return startBlockSeasonColor.toInt();
+			});
+
+			blockPosColorCache.put(startBlockPos, new Color(biomeBlendedBlockSeasonColor));
+			return biomeBlendedBlockSeasonColor;
 		}, Registries.BLOCK.get(blockIdentifier));
 	}
 
 	private void registerItemColorProvider(Identifier itemIdentifier) {
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
-			var client = MinecraftClient.getInstance();
+			@NotNull var client = MinecraftClient.getInstance();
 			if (client.world == null || client.player == null) {
 				throw new IllegalStateException(
 						"Error occurred while registering item color providers: client.world == null || client.player == null.");
 			}
 
-			var itemSeasonColor = SeasonColorUtil.getItemSeasonColor(Registries.ITEM.getId(stack.getItem()),
+			@Nullable var itemSeasonColor = SeasonColorUtil.getItemSeasonColor(Registries.ITEM.getId(stack.getItem()),
 					client.world.getBiome(client.player.getBlockPos()),
 					SimpleSeasonsApi.getSeason(client.world), SimpleSeasonsApi.getSeasonProgress(client.world)
 			);

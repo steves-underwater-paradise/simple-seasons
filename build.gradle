@@ -2,8 +2,8 @@
 //file:noinspection GroovyAssignabilityCheck
 
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
-    id 'maven-publish'
+    id "fabric-loom" version "${loom_version}"
+    id "maven-publish"
 }
 
 version = project.mod_version
@@ -46,6 +46,9 @@ dependencies {
 
     // Fabric Permissions API
     include(modImplementation("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}"))
+
+    // Sodium
+    modImplementation("maven.modrinth:sodium:${project.sodium_version}")
 }
 
 processResources {

@@ -13,9 +13,7 @@
     "world.gen.feature.FreezeTopLayerFeatureMixin"
   ],
   "client": [
-    "client.accessor.ChunkRendererRegionAccessor",
     "client.accessor.WorldRendererAccessor",
-    "client.color.world.BiomeColorsMixin",
     "client.render.WorldRendererMixin",
     "client.world.ClientWorldMixin"
   ],
