@@ -13,7 +13,6 @@
     "world.gen.feature.FreezeTopLayerFeatureMixin"
   ],
   "client": [
-    "client.accessor.WorldRendererAccessor",
     "client.render.WorldRendererMixin",
     "client.world.ClientWorldMixin"
   ],

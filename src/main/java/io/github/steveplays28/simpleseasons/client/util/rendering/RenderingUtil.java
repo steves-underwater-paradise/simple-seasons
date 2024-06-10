@@ -1,8 +1,5 @@
 package io.github.steveplays28.simpleseasons.client.util.rendering;
 
-import io.github.steveplays28.simpleseasons.client.compat.sodium.SimpleSeasonsSodiumCompat;
-import io.github.steveplays28.simpleseasons.mixin.client.accessor.WorldRendererAccessor;
-import me.jellysquid.mods.sodium.client.render.SodiumWorldRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -12,34 +9,23 @@ import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public class RenderingUtil {
-	@SuppressWarnings("ForLoopReplaceableByForEach")
 	public static void reloadChunkColors(@NotNull ClientWorld clientWorld) {
 		clientWorld.reloadColor();
 
-		if (SimpleSeasonsSodiumCompat.isSodiumLoaded()) {
-			@NotNull var client = MinecraftClient.getInstance();
-			@Nullable var player = client.player;
-			if (player == null) {
-				return;
+		@NotNull final var client = MinecraftClient.getInstance();
+		@Nullable final var player = client.player;
+		if (player == null) {
+			return;
+		}
+
+		@NotNull final var playerChunkPos = player.getChunkPos();
+		var clampedViewDistance = MinecraftClient.getInstance().options.getClampedViewDistance();
+		for (int chunkX = playerChunkPos.x - clampedViewDistance; chunkX < playerChunkPos.x + clampedViewDistance; chunkX++) {
+			for (int chunkZ = playerChunkPos.z - clampedViewDistance; chunkZ < playerChunkPos.z + clampedViewDistance; chunkZ++) {
+				for (int chunkY = clientWorld.getBottomY() >> 4; chunkY < clientWorld.getTopY() >> 4; chunkY++) {
+					client.worldRenderer.scheduleChunkRender(chunkX, chunkY, chunkZ, true);
+				}
 			}
-
-			var playerChunkPos = player.getChunkPos();
-			var clampedViewDistance = MinecraftClient.getInstance().options.getClampedViewDistance();
-			SodiumWorldRenderer.instance().scheduleRebuildForChunks(
-					playerChunkPos.x - clampedViewDistance, clientWorld.getBottomY() >> 4, playerChunkPos.z - clampedViewDistance,
-					playerChunkPos.x + clampedViewDistance, clientWorld.getTopY() >> 4, playerChunkPos.z + clampedViewDistance, true
-			);
-			return;
-		}
-
-		@Nullable var chunks = ((WorldRendererAccessor) clientWorld.worldRenderer).getChunks();
-		if (chunks == null) {
-			return;
-		}
-
-		@NotNull var builtChunks = chunks.chunks;
-		for (int i = 0; i < builtChunks.length; i++) {
-			builtChunks[i].scheduleRebuild(true);
 		}
 	}
 }
