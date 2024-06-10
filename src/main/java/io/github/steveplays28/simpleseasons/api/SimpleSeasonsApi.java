@@ -4,6 +4,7 @@ import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.client.SimpleSeasonsClient;
 import io.github.steveplays28.simpleseasons.registry.tag.biome.SimpleSeasonsBiomeTags;
 import io.github.steveplays28.simpleseasons.server.api.world.registry.state.ServerWorldSeasonTrackerRegistry;
+import io.github.steveplays28.simpleseasons.server.util.time.TimeUtil;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
@@ -13,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public class SimpleSeasonsApi {
+	private static @Nullable Long SEASON_LENGTH_SECONDS_CACHED;
+
 	/**
 	 * Checks if the specified {@link World} has seasons.
 	 * Any worlds with unfixed time will have seasons.
@@ -102,5 +105,20 @@ public class SimpleSeasonsApi {
 		}
 
 		seasonTracker.setSeason(season);
+	}
+
+	/**
+	 * Gets the length of a season, in seconds.
+	 * This value is cached as {@link SimpleSeasonsApi#SEASON_LENGTH_SECONDS_CACHED}.
+	 *
+	 * @return The length of a season, in seconds.
+	 */
+	public static long getSeasonLengthSeconds() {
+		if (SEASON_LENGTH_SECONDS_CACHED == null) {
+			SEASON_LENGTH_SECONDS_CACHED = Math.round(
+					TimeUtil.getDayNightCycleLengthSeconds() * (TimeUtil.getYearLengthDays() / SeasonTracker.Seasons.values().length));
+		}
+
+		return SEASON_LENGTH_SECONDS_CACHED;
 	}
 }

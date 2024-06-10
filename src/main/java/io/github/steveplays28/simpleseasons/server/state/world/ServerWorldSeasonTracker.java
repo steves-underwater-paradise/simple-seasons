@@ -1,6 +1,8 @@
 package io.github.steveplays28.simpleseasons.server.state.world;
 
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
+import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
+import io.github.steveplays28.simpleseasons.server.util.time.TimeUtil;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -14,15 +16,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class ServerWorldSeasonTracker extends SeasonTracker {
 	private final @NotNull MinecraftServer server;
+	private final @NotNull ServerWorld serverWorld;
 	private final @NotNull ServerWorldSeasonState serverWorldSeasonState;
 
 	public ServerWorldSeasonTracker(@NotNull MinecraftServer server, @NotNull ServerWorld serverWorld) {
 		super();
 
 		this.server = server;
+		this.serverWorld = serverWorld;
 		this.serverWorldSeasonState = ServerWorldSeasonState.getOrCreate(serverWorld.getPersistentStateManager());
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server1) -> sendSeasonStatePacket(handler.player));
-		ServerTickEvents.END_SERVER_TICK.register(this::onEndServerTick);
+		ServerTickEvents.END_WORLD_TICK.register(this::onEndServerWorldTick);
 	}
 
 	@Override
@@ -55,9 +59,14 @@ public class ServerWorldSeasonTracker extends SeasonTracker {
 		return packet;
 	}
 
-	private void onEndServerTick(@NotNull MinecraftServer server) {
-		if (server.getOverworld().getTime() % 4L == 0) {
-			setSeasonProgress(getSeasonProgress() + 0.001f);
+	private void onEndServerWorldTick(@NotNull ServerWorld serverWorld) {
+		if (serverWorld != this.serverWorld) {
+			return;
+		}
+
+		// TODO: Replace the 0.1f constant with a season progress update rate config option
+		if (serverWorld.getTime() % (TimeUtil.getTicksPerSecond() / 0.1f) == 0) {
+			setSeasonProgress(getSeasonProgress() + (1f / SimpleSeasonsApi.getSeasonLengthSeconds() / 0.1f));
 		}
 	}
 
