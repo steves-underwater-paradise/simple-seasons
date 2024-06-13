@@ -1,8 +1,22 @@
 {
-  "#minecraft:is_overworld": {
-    "SPRING": "#aedc5b",
-    "SUMMER": "#9fd836",
-    "FALL": "#fcb23c",
-    "WINTER": "#e6e8f2"
-  }
+  "biomes": [
+    {
+      "identifier": "minecraft:lush_caves",
+      "season_colors": {
+        "spring": "#aeef2b",
+        "summer": "#98d33f",
+        "fall": "#aeef2b",
+        "winter": "#98d33f"
+      }
+    },
+    {
+      "identifier": "#minecraft:is_overworld",
+      "season_colors": {
+        "spring": "#aedc5b",
+        "summer": "#9fd836",
+        "fall": "#fcb23c",
+        "winter": "#e6e8f2"
+      }
+    }
+  ]
 }

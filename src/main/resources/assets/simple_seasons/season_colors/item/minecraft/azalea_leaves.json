@@ -15,7 +15,7 @@
         "spring": "#f7fc92",
         "summer": "#fcf04e",
         "fall": "#8baa5c",
-        "winter": "#c6af47"
+        "winter": "#a58f2c"
       }
     },
     {
@@ -24,7 +24,7 @@
         "spring": "#f7fc92",
         "summer": "#fcf04e",
         "fall": "#8baa5c",
-        "winter": "#c6af47"
+        "winter": "#a58f2c"
       }
     },
     {
@@ -39,10 +39,10 @@
     {
       "identifier": "#minecraft:is_overworld",
       "season_colors": {
-        "spring": "#d7fc1b",
-        "summer": "#edf736",
-        "fall": "#fdc039",
-        "winter": "#fdfcf8"
+        "spring": "#c5fc0f",
+        "summer": "#e2f727",
+        "fall": "#fcce6a",
+        "winter": "#f4f4f4"
       }
     }
   ]
