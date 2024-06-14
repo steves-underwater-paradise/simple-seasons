@@ -1,0 +1,6 @@
+{
+  "parent": "simple_seasons:block/tinted_carpet",
+  "textures": {
+    "wool": "minecraft:block/moss_block"
+  }
+}

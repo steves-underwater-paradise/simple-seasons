@@ -1,0 +1,49 @@
+{
+  "biomes": [
+    {
+      "identifier": "minecraft:lush_caves",
+      "season_colors": {
+        "spring": "#aeef2b",
+        "summer": "#98d33f",
+        "fall": "#aeef2b",
+        "winter": "#98d33f"
+      }
+    },
+    {
+      "identifier": "#minecraft:is_savanna",
+      "season_colors": {
+        "spring": "#f7fc92",
+        "summer": "#fcf04e",
+        "fall": "#8baa5c",
+        "winter": "#c6af47"
+      }
+    },
+    {
+      "identifier": "#minecraft:is_jungle",
+      "season_colors": {
+        "spring": "#f7fc92",
+        "summer": "#fcf04e",
+        "fall": "#8baa5c",
+        "winter": "#c6af47"
+      }
+    },
+    {
+      "identifier": "#c:swamp",
+      "season_colors": {
+        "spring": "#92b74e",
+        "summer": "#a3ba3f",
+        "fall": "#e9997e",
+        "winter": "#f2f4fc"
+      }
+    },
+    {
+      "identifier": "#minecraft:is_overworld",
+      "season_colors": {
+        "spring": "#d7fc1b",
+        "summer": "#edf736",
+        "fall": "#fdc039",
+        "winter": "#fdfcf8"
+      }
+    }
+  ]
+}
