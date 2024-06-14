@@ -3,7 +3,7 @@
   "id": "simple-seasons",
   "version": "${version}",
   "name": "Simple Seasons",
-  "description": "Seasons, but they don't cause a memory leak™",
+  "description": "Adds a simple season system.",
   "authors": [
     "Steveplays28"
   ],

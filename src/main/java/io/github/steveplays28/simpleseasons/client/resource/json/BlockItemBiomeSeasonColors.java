@@ -2,12 +2,15 @@ package io.github.steveplays28.simpleseasons.client.resource.json;
 
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import io.github.steveplays28.simpleseasons.util.Color;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public class BlockItemBiomeSeasonColors {
 	@SuppressWarnings("unused")
 	private @Nullable List<BiomeSeasonColors> biomes;

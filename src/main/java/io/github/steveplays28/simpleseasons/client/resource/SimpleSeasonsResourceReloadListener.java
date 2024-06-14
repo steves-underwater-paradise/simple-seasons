@@ -42,8 +42,6 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 	private static final @NotNull String BLOCK_FOLDER_NAME = "block";
 	private static final @NotNull String ITEM_FOLDER_NAME = "item";
 
-	private static boolean isFirstLoad = true;
-
 	/**
 	 * @return The unique {@link Identifier} of this listener.
 	 */
@@ -68,7 +66,6 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 					resourceManager, BLOCK_FOLDER_NAME, SeasonColorRegistries.BLOCK_SEASON_COLORS_REGISTRY);
 			@NotNull final var itemsSeasonColors = loadSeasonColors(
 					resourceManager, ITEM_FOLDER_NAME, SeasonColorRegistries.ITEM_SEASON_COLORS_REGISTRY);
-			isFirstLoad = false;
 			return new Pair<>(blocksSeasonColors, itemsSeasonColors);
 		}, executor);
 	}
@@ -133,11 +130,6 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 			);
 			if (registry.containsKey(identifier)) {
 				continue;
-			}
-			if (!isFirstLoad) {
-				SimpleSeasons.LOGGER.info(
-						"Detected changes to season colors, please restart your game for the changes to take effect (cannot modify frozen registries).");
-				return blockItemBiomeSeasonColorsList;
 			}
 
 			try {
