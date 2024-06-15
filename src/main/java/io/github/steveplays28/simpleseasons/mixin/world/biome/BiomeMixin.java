@@ -1,6 +1,7 @@
 package io.github.steveplays28.simpleseasons.mixin.world.biome;
 
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
+import io.github.steveplays28.simpleseasons.config.SimpleSeasonsConfig;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import net.minecraft.block.Blocks;
@@ -28,7 +29,7 @@ public abstract class BiomeMixin {
 			return;
 		}
 
-		if ( !this.hasPrecipitation() || SimpleSeasonsApi.biomeHasWetAndDrySeasons(
+		if (!this.hasPrecipitation() || SimpleSeasonsApi.biomeHasWetAndDrySeasons(
 				world.getBiome(blockPos)) || !Blocks.SNOW.getDefaultState().canPlaceAt(world, blockPos)) {
 			cir.setReturnValue(false);
 			return;
@@ -39,12 +40,14 @@ public abstract class BiomeMixin {
 
 	@Inject(method = "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z", at = @At(value = "HEAD"), cancellable = true)
 	private void simple_seasons$canSetIceAllowSettingIceInWinter(@NotNull WorldView worldView, @NotNull BlockPos blockPos, boolean doWaterCheck, @NotNull CallbackInfoReturnable<Boolean> cir) {
-		if (!(worldView instanceof @NotNull World world) || !SimpleSeasonsApi.worldHasSeasons(world)) {
+		if (!(worldView instanceof @NotNull World world) || !SimpleSeasonsApi.worldHasSeasons(
+				world) || !SimpleSeasonsConfig.HANDLER.instance().iceFormationInWaterDuringWinter) {
 			return;
 		}
 
 		var biome = world.getBiome(blockPos);
-		if (biome.isIn(ConventionalBiomeTags.OCEAN) || SimpleSeasonsApi.biomeHasWetAndDrySeasons(world.getBiome(blockPos)) || world.getLightLevel(
+		if (biome.isIn(ConventionalBiomeTags.OCEAN) || SimpleSeasonsApi.biomeHasWetAndDrySeasons(
+				world.getBiome(blockPos)) || world.getLightLevel(
 				LightType.BLOCK, blockPos) >= 10 || doWaterCheck && !world.getFluidState(blockPos).isOf(Fluids.WATER)) {
 			cir.setReturnValue(false);
 			return;

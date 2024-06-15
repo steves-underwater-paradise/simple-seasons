@@ -3,6 +3,7 @@ package io.github.steveplays28.simpleseasons.config;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.autogen.AutoGen;
+import dev.isxander.yacl3.config.v2.api.autogen.Boolean;
 import dev.isxander.yacl3.config.v2.api.autogen.FloatField;
 import dev.isxander.yacl3.config.v2.api.autogen.FloatSlider;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
@@ -31,4 +32,8 @@ public class SimpleSeasonsConfig {
 	@SerialEntry(comment = "The length multiplier of seasons. Increasing this value will result in longer seasons and decreasing this value will result in shorter seasons.")
 	@FloatField(min = 0.0001f, format = "%.4f")
 	public float seasonLengthMultiplier = 1f;
+	@AutoGen(category = SERVER_CATEGORY)
+	@SerialEntry(comment = "Determines if ice should form in water (with the exception of water in oceans and water in biomes with a wet/dry season) during winter.")
+	@Boolean(colored = true)
+	public boolean iceFormationInWaterDuringWinter = true;
 }
