@@ -26,6 +26,12 @@ repositories {
         name = "SonaType"
         url = "https://oss.sonatype.org/content/repositories/snapshots"
     }
+
+    // YetAnotherConfigLib
+    maven {
+        name "Xander Maven"
+        url "https://maven.isxander.dev/releases"
+    }
 }
 
 dependencies {
@@ -35,7 +41,6 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Runtime mods
-    modRuntimeOnly "maven.modrinth:modmenu:${project.modmenu_version}"
     modRuntimeOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
 
     // Mixin Extras
@@ -47,8 +52,11 @@ dependencies {
     // Fabric Permissions API
     include(modImplementation("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}"))
 
-    // Sodium
-    modImplementation("maven.modrinth:sodium:${project.sodium_version}")
+    // Mod Menu
+    modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
+
+    // YetAnotherConfigLib
+    modImplementation("dev.isxander:yet-another-config-lib:${project.yet_another_config_lib_version}-fabric")
 }
 
 processResources {
@@ -60,7 +68,8 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
                 "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
+                "loader_version": project.loader_version,
+                "yet_another_config_lib_version": project.yet_another_config_lib_version
     }
 }
 

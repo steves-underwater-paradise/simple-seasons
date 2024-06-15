@@ -9,25 +9,31 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_NAMESPACE;
-import static io.github.steveplays28.simpleseasons.server.command.season.SeasonCommandCategory.seasonCommandCategory;
+import static io.github.steveplays28.simpleseasons.server.command.season.SeasonCommandCategory.SEASON_COMMAND_CATEGORY;
 
+// TODO: Refactor into a base class that can be overridden and extended
+//  This reduces duplicate code
 public class SetSeasonCommand {
 	public static final String NAME = "set";
 	public static final int PERMISSION_LEVEL = 4;
 
-	public static LiteralArgumentBuilder<ServerCommandSource> register() {
-		return CommandManager.literal(MOD_NAMESPACE).then(CommandManager.literal(seasonCommandCategory).then(
-				CommandManager.literal(NAME).then(CommandManager.argument("season", IntegerArgumentType.integer()).executes(
+	public static @NotNull LiteralArgumentBuilder<ServerCommandSource> register() {
+		return CommandManager.literal(MOD_NAMESPACE).then(CommandManager.literal(SEASON_COMMAND_CATEGORY).then(
+				CommandManager.literal(NAME).then(CommandManager.argument(SEASON_COMMAND_CATEGORY, IntegerArgumentType.integer()).executes(
 						ctx -> execute(ctx, ctx.getSource())).requires(
-						(ctx) -> Permissions.check(ctx, MOD_ID + ".commands." + NAME, PERMISSION_LEVEL)))));
+						(ctx) -> Permissions.check(
+								ctx,
+								String.format("%s.commands.%s.%s", MOD_NAMESPACE, SEASON_COMMAND_CATEGORY, NAME), PERMISSION_LEVEL
+						)
+				))));
 	}
 
-	public static int execute(CommandContext<ServerCommandSource> commandContext, ServerCommandSource source) {
+	public static int execute(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull ServerCommandSource source) {
 		var seasonIdArgument = IntegerArgumentType.getInteger(commandContext, "season");
 		if (seasonIdArgument > SeasonTracker.Seasons.WINTER.ordinal() || seasonIdArgument < SeasonTracker.Seasons.SPRING.ordinal()) {
 			source.sendError(

@@ -1,6 +1,7 @@
 package io.github.steveplays28.simpleseasons.server.command;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import io.github.steveplays28.simpleseasons.server.command.config.ReloadConfigCommand;
 import io.github.steveplays28.simpleseasons.server.command.season.SetSeasonCommand;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.ServerCommandSource;
@@ -14,7 +15,10 @@ public class CommandRegistry {
 	 * @see CommandRegistry#registerCommands
 	 * @see CommandRegistrationCallback
 	 */
-	public static final List<LiteralArgumentBuilder<ServerCommandSource>> COMMANDS = List.of(SetSeasonCommand.register());
+	public static final List<LiteralArgumentBuilder<ServerCommandSource>> COMMANDS = List.of(
+			SetSeasonCommand.register(),
+			ReloadConfigCommand.register()
+	);
 
 	/**
 	 * Registers serverside commands.

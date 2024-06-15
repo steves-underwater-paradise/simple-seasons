@@ -1,6 +1,7 @@
 package io.github.steveplays28.simpleseasons;
 
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
+import io.github.steveplays28.simpleseasons.config.SimpleSeasonsConfig;
 import io.github.steveplays28.simpleseasons.server.command.CommandRegistry;
 import io.github.steveplays28.simpleseasons.server.api.world.registry.state.ServerWorldSeasonTrackerRegistry;
 import io.github.steveplays28.simpleseasons.server.state.world.ServerWorldSeasonTracker;
@@ -23,6 +24,9 @@ public class SimpleSeasons implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("Loading {}.", MOD_NAME);
 
+		if (!SimpleSeasonsConfig.HANDLER.load()) {
+			LOGGER.warn("{}' config failed to load, falling back to the default config.", MOD_NAME);
+		}
 		ServerLifecycleEvents.SERVER_STARTED.register(this::registerWorldSeasonTrackers);
 		CommandRegistry.registerCommands();
 	}
@@ -33,7 +37,8 @@ public class SimpleSeasons implements ModInitializer {
 				continue;
 			}
 
-			ServerWorldSeasonTrackerRegistry.register(serverWorld.getRegistryKey().getValue(), new ServerWorldSeasonTracker(server, serverWorld));
+			ServerWorldSeasonTrackerRegistry.register(
+					serverWorld.getRegistryKey().getValue(), new ServerWorldSeasonTracker(server, serverWorld));
 		}
 	}
 }

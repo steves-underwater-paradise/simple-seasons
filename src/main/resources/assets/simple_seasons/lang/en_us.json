@@ -1,0 +1,8 @@
+{
+  "yacl3.config.simple-seasons:config.title": "Simple Seasons Config",
+  "yacl3.config.simple-seasons:config.category.Server": "Server-side",
+  "yacl3.config.simple-seasons:config.seasonProgressUpdateRate": "Season Progress Update Rate",
+  "yacl3.config.simple-seasons:config.seasonProgressUpdateRate.desc": "The rate at which the season progress updates. Every time the season progress updates in a world, a packet is sent to all clients in that world containing the new season progress. Subsequently, all clients in that world will reload the world's color and schedule a rebuild for all chunks.\nIncreasing this value will result in packets being sent more often to all clients in a world and thus season colors will update more often on all clients in that world. Decreasing this value will result in packets being sent less often to all clients in a world and thus season colors will update less often on all clients in that world. This config option can be performance intensive if set too high.",
+  "yacl3.config.simple-seasons:config.seasonLengthMultiplier": "Season Length Multiplier",
+  "yacl3.config.simple-seasons:config.seasonLengthMultiplier.desc": "The length multiplier of seasons. Increasing this value will result in longer seasons and decreasing this value will result in shorter seasons."
+}

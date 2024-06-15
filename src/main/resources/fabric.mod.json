@@ -20,15 +20,19 @@
     ],
     "main": [
       "io.github.steveplays28.simpleseasons.SimpleSeasons"
+    ],
+    "modmenu": [
+      "io.github.steveplays28.simpleseasons.client.compat.modmenu.SimpleSeasonsClientModMenuCompat"
     ]
   },
   "mixins": [
     "simple-seasons.mixins.json"
   ],
-  "accessWidener" : "simple-seasons.accesswidener",
+  "accessWidener": "simple-seasons.accesswidener",
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "${minecraft_version}",
+    "yet_another_config_lib_v3": ">=${yet_another_config_lib_version}-fabric"
   }
 }

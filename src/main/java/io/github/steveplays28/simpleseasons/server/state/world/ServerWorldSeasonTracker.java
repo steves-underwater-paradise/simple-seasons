@@ -2,6 +2,7 @@ package io.github.steveplays28.simpleseasons.server.state.world;
 
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
+import io.github.steveplays28.simpleseasons.config.SimpleSeasonsConfig;
 import io.github.steveplays28.simpleseasons.server.util.time.TimeUtil;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -64,9 +65,11 @@ public class ServerWorldSeasonTracker extends SeasonTracker {
 			return;
 		}
 
-		// TODO: Replace the 0.1f constant with a season progress update rate config option
-		if (serverWorld.getTime() % (TimeUtil.getTicksPerSecond() / 0.1f) == 0) {
-			setSeasonProgress(getSeasonProgress() + (1f / SimpleSeasonsApi.getSeasonLengthSeconds() / 0.1f));
+		var configInstance = SimpleSeasonsConfig.HANDLER.instance();
+		var seasonColorUpdateRate = configInstance.seasonProgressUpdateRate;
+		if (serverWorld.getTime() % (TimeUtil.getTicksPerSecond() / seasonColorUpdateRate) == 0) {
+			setSeasonProgress(
+					getSeasonProgress() + (1f / (SimpleSeasonsApi.getSeasonLengthSeconds() * configInstance.seasonLengthMultiplier) / seasonColorUpdateRate));
 		}
 	}
 
