@@ -1,18 +1,37 @@
 {
   "schemaVersion": 1,
-  "id": "simple-seasons",
+  "id": "${mod_id}",
   "version": "${version}",
-  "name": "Simple Seasons",
-  "description": "Adds a simple season system.",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
   "authors": [
     "Steveplays28"
   ],
+  "contributors": [
+    "JorisDeBeer"
+  ],
   "contact": {
-    "website": "https://steveplays28.github.io",
-    "repo": "https://github.com/Steveplays28/simple-seasons"
+    "homepage": "https://modrinth.com/mod/${mod_id}",
+    "sources": "https://github.com/Steveplays28/${mod_id}",
+    "issues": "https://github.com/Steveplays28/${mod_id}/issues"
   },
   "license": "LGPL-3.0",
-  "icon": "assets/simple_seasons/icon.png",
+  "icon": "assets/${mod_namespace}/icon.png",
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/KbWxgGg"
+      }
+    },
+    "mc-publish": {
+      "loaders": [
+        "fabric",
+        "quilt"
+      ],
+      "curseforge": "${curseforge_project_id}",
+      "modrinth": "${modrinth_project_id}"
+    }
+  },
   "environment": "*",
   "entrypoints": {
     "client": [
@@ -26,13 +45,13 @@
     ]
   },
   "mixins": [
-    "simple-seasons.mixins.json"
+    "${mod_namespace}.mixins.json"
   ],
-  "accessWidener": "simple-seasons.accesswidener",
+  "accessWidener": "${mod_namespace}.accesswidener",
   "depends": {
-    "fabricloader": ">=${loader_version}",
+    "fabricloader": ">=${fabric_loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}",
+    "minecraft": "${supported_minecraft_version}",
     "yet_another_config_lib_v3": ">=${yet_another_config_lib_version}-fabric"
   }
 }

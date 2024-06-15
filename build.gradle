@@ -9,6 +9,21 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
+def archivesNameFabric = "${rootProject.mod_id}-fabric"
+
+base {
+    archivesName = archivesNameFabric
+}
+
+allprojects {
+    version = "${rootProject.mod_version}+mc${rootProject.supported_minecraft_version_name}"
+    group = rootProject.maven_group
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/${project.mod_namespace}.accesswidener")
+}
+
 repositories {
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
@@ -36,39 +51,44 @@ repositories {
 
 dependencies {
     // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
     // Runtime mods
-    modRuntimeOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
+    modRuntimeOnly "maven.modrinth:cloth-config:${rootProject.cloth_config_version}"
 
     // Mixin Extras
-    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixin_extras_version}")))
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${rootProject.mixin_extras_version}")))
 
     // Fabric API
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
     // Fabric Permissions API
-    include(modImplementation("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}"))
+    include(modImplementation("me.lucko:fabric-permissions-api:${rootProject.fabric_permissions_api_version}"))
 
     // Mod Menu
-    modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
+    modImplementation "maven.modrinth:modmenu:${rootProject.modmenu_version}"
 
     // YetAnotherConfigLib
-    modImplementation("dev.isxander:yet-another-config-lib:${project.yet_another_config_lib_version}-fabric")
+    modImplementation("dev.isxander:yet-another-config-lib:${rootProject.yet_another_config_lib_version}-fabric")
 }
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version,
+                "mod_id": rootProject.mod_id,
+                "mod_namespace": rootProject.mod_namespace,
+                "mod_name": rootProject.mod_name,
+                "mod_description": rootProject.mod_description,
+                "mod_license": rootProject.mod_license,
+                "curseforge_project_id": rootProject.curseforge_project_id,
+                "modrinth_project_id": rootProject.modrinth_project_id,
+                "fabric_loader_version": rootProject.fabric_loader_version,
+                "supported_minecraft_version": rootProject.supported_minecraft_version,
                 "yet_another_config_lib_version": project.yet_another_config_lib_version
     }
 }
@@ -90,7 +110,7 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-    archivesBaseName = project.archives_base_name
+
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.
@@ -107,19 +127,20 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            groupId = rootProject.maven_group
+            artifactId = archivesNameFabric
             from components.java
         }
     }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/steves-underwater-paradise/${rootProject.mod_id}")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
-}
-
-loom {
-    accessWidenerPath = file("src/main/resources/simple-seasons.accesswidener")
 }
