@@ -1,0 +1,22 @@
+{
+  "biomes": [
+    {
+      "identifier": "minecraft:lush_caves",
+      "season_colors": {
+        "spring": "#aeef2b",
+        "summer": "#98d33f",
+        "fall": "#aeef2b",
+        "winter": "#98d33f"
+      }
+    },
+    {
+      "identifier": "#minecraft:is_overworld",
+      "season_colors": {
+        "spring": "#f7fc92",
+        "summer": "#fcf04e",
+        "fall": "#8baa5c",
+        "winter": "#a58f2c"
+      }
+    }
+  ]
+}

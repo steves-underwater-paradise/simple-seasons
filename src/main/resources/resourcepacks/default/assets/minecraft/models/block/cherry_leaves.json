@@ -1,0 +1,7 @@
+{
+  "parent": "simple_seasons:block/leaves_2_layers",
+  "textures": {
+    "all": "simple_seasons:block/cherry_leaves_flowers",
+    "all_tinted": "simple_seasons:block/cherry_leaves"
+  }
+}
