@@ -53,8 +53,6 @@ for a list of incompatibilities.
 
 ![Fabric](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/compact/supported/fabric_vector.svg)
 ![Quilt](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/compact/supported/quilt_vector.svg)
-![Forge](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/compact/supported/forge_vector.svg)
-![NeoForge](docs/assets/badges/compact/supported/neoforge_vector.svg)
 
 See the version info in the filename for the supported Minecraft versions.  
 Made for the Fabric and Quilt modloaders.
