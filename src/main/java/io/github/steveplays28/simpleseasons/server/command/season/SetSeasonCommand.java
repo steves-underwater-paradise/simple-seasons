@@ -3,6 +3,7 @@ package io.github.steveplays28.simpleseasons.server.command.season;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
+import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -20,7 +21,7 @@ public class SetSeasonCommand {
 
 	public static @NotNull LiteralArgumentBuilder<ServerCommandSource> register() {
 		return CommandManager.literal(MOD_NAMESPACE).then(CommandManager.literal(SEASON_COMMAND_CATEGORY).then(
-				CommandManager.literal(NAME).then(CommandManager.argument(SEASON_COMMAND_CATEGORY, SeasonArgumentType.season()).executes(
+				CommandManager.literal(NAME).then(CommandManager.argument(SEASON_COMMAND_CATEGORY, new SeasonArgumentType()).executes(
 						ctx -> execute(ctx, ctx.getSource())).requires(
 						(ctx) -> Permissions.check(
 								ctx,
@@ -30,13 +31,16 @@ public class SetSeasonCommand {
 	}
 
 	public static int execute(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull ServerCommandSource source) {
-		var seasonArgument = SeasonArgumentType.getSeason(commandContext, "season");
+		var seasonArgument = commandContext.getArgument(NAME, SeasonTracker.Seasons.class);
 
 		var serverWorld = source.getWorld();
 		var currentSeason = SimpleSeasonsApi.getSeason(serverWorld);
 		if (seasonArgument.getId() == currentSeason.getId()) {
 			source.sendError(Text.literal(
-					String.format("Season argument (%s) is the same as the current season (%s).", seasonArgument.asString(), currentSeason.asString())));
+					String.format(
+							"Season argument (%s) is the same as the current season (%s).", seasonArgument.asString(),
+							currentSeason.asString()
+					)));
 			return 1;
 		}
 
