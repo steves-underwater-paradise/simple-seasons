@@ -15,11 +15,12 @@ public abstract class SeasonTracker {
 	public enum Seasons implements StringIdentifiable {
 		SPRING("spring"), SUMMER("summer"), FALL("fall"), WINTER("winter");
 
-		public static final com.mojang.serialization.Codec<Seasons> CODEC = StringIdentifiable.createCodec(Seasons::values);
-		private final String name;
+		public static final @NotNull com.mojang.serialization.Codec<Seasons> CODEC = StringIdentifiable.createCodec(Seasons::values);
+
+		private final @NotNull String name;
 		private final int value;
 
-		Seasons(String name) {
+		Seasons(@NotNull String name) {
 			this.name = name;
 			this.value = ordinal();
 		}
@@ -48,7 +49,7 @@ public abstract class SeasonTracker {
 		}
 
 		@Override
-		public String asString() {
+		public @NotNull String asString() {
 			return name;
 		}
 	}
