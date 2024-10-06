@@ -1,22 +1,24 @@
 package io.github.steveplays28.simpleseasons.server.command.season;
 
-import com.mojang.brigadier.context.CommandContext;
+import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
+import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.minecraft.command.argument.EnumArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import net.minecraft.util.Identifier;
 
 public class SeasonArgumentType extends EnumArgumentType<SeasonTracker.Seasons> {
+	public static final String NAME = "season";
 
-
-	private SeasonArgumentType() {
+	SeasonArgumentType() {
 		super(SeasonTracker.Seasons.CODEC, SeasonTracker.Seasons::values);
 	}
 
-	public static SeasonArgumentType season() {
-		return new SeasonArgumentType();
-	}
-
-	public static SeasonTracker.Seasons getSeason(CommandContext<ServerCommandSource> context, String id) {
-		return context.getArgument(id, SeasonTracker.Seasons.class);
+	public static void register() {
+		ArgumentTypeRegistry.registerArgumentType(
+				new Identifier(SimpleSeasons.MOD_ID, NAME),
+				SeasonArgumentType.class,
+				ConstantArgumentSerializer.of(SeasonArgumentType::new)
+		);
 	}
 }
