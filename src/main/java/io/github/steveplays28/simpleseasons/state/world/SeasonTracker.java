@@ -1,6 +1,7 @@
 package io.github.steveplays28.simpleseasons.state.world;
 
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
+import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -11,24 +12,16 @@ public abstract class SeasonTracker {
 
 	private @NotNull Seasons season = Seasons.SPRING;
 
-	public enum Seasons {
-		SPRING, SUMMER, FALL, WINTER;
+	public enum Seasons implements StringIdentifiable {
+		SPRING("spring"), SUMMER("summer"), FALL("fall"), WINTER("winter");
 
+		public static final com.mojang.serialization.Codec<Seasons> CODEC = StringIdentifiable.createCodec(Seasons::values);
+		private final String name;
 		private final int value;
 
-		Seasons() {
+		Seasons(String name) {
+			this.name = name;
 			this.value = ordinal();
-		}
-
-		public static @NotNull String getName(int value) {
-			for (Seasons season : Seasons.values()) {
-				if (season.value == value) {
-					return season.name();
-				}
-			}
-
-			// Not found
-			return "season not found";
 		}
 
 		public int getId() {
@@ -54,34 +47,9 @@ public abstract class SeasonTracker {
 			return Seasons.values()[season];
 		}
 
-		/**
-		 * Gets the season from either a {@link String} ID or from a {@link String} name.
-		 *
-		 * @param season Either the season's {@link String} ID or the season's {@link String} name. Must be within the bounds of {@link Seasons}.
-		 * @return The season at the requested ID in {@link Seasons}.
-		 */
-		@SuppressWarnings("ForLoopReplaceableByForEach")
-		public static @NotNull Seasons parse(@NotNull String season) {
-			var seasons = Seasons.values();
-			Integer seasonId = null;
-			try {
-				seasonId = Integer.parseInt(season);
-			} catch (NumberFormatException e) {
-				for (int i = 0; i < seasons.length; i++) {
-					var seasonValue = seasons[i];
-					if (seasonValue.name().equalsIgnoreCase(season)) {
-						seasonId = seasonValue.getId();
-					}
-				}
-
-				if (seasonId == null) {
-					SimpleSeasons.LOGGER.error(
-							"Exception thrown while trying to parse a String season into a SeasonTracker.Seasons value:\n", e);
-					return seasons[0];
-				}
-			}
-
-			return seasons[seasonId];
+		@Override
+		public String asString() {
+			return name;
 		}
 	}
 
