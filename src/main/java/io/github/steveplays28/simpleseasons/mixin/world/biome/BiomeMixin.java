@@ -3,7 +3,7 @@ package io.github.steveplays28.simpleseasons.mixin.world.biome;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.config.SimpleSeasonsConfig;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.BlockPos;
@@ -46,7 +46,7 @@ public abstract class BiomeMixin {
 		}
 
 		var biome = world.getBiome(blockPos);
-		if (biome.isIn(ConventionalBiomeTags.OCEAN) || SimpleSeasonsApi.biomeHasWetAndDrySeasons(
+		if (biome.isIn(ConventionalBiomeTags.IS_OCEAN) || SimpleSeasonsApi.biomeHasWetAndDrySeasons(
 				world.getBiome(blockPos)) || world.getLightLevel(
 				LightType.BLOCK, blockPos) >= 10 || doWaterCheck && !world.getFluidState(blockPos).isOf(Fluids.WATER)) {
 			cir.setReturnValue(false);
