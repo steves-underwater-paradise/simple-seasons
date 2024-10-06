@@ -71,9 +71,11 @@ Server-side and client-side.
 
 ## Attribution
 
-Thank you to [Andrew Grant](https://github.com/Andrew6rant) and [Bawnorton](https://github.com/Bawnorton) (for their previous works
-related to season color transitions and Sodium compatible chunk rebuilding), [JorisDeBeer](https://github.com/JorisDeBeer) (for his
-contributions to Simple Seasons) and [GrandmaPork](https://github.com/GrandmaPork) (for feedback).
+Thank you to:
+- [Andrew Grant](https://github.com/Andrew6rant) and [Bawnorton](https://github.com/Bawnorton): for their previous works
+related to season color transitions and Sodium compatible chunk rebuilding
+- [JorisDeBeer](https://github.com/JorisDeBeer) and [ix0rai](https://github.com/ix0rai): for their contributions to Simple Seasons
+- [GrandmaPork](https://github.com/GrandmaPork): for feedback
 
 ## License
 
