@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#c:climate_wet",
-    "#c:climate_dry"
+    "#c:is_wet",
+    "#c:is_dry"
   ]
 }
