@@ -16,7 +16,7 @@ public class SeasonArgumentType extends EnumArgumentType<SeasonTracker.Seasons> 
 
 	public static void register() {
 		ArgumentTypeRegistry.registerArgumentType(
-				new Identifier(SimpleSeasons.MOD_ID, NAME),
+				Identifier.of(SimpleSeasons.MOD_ID, NAME),
 				SeasonArgumentType.class,
 				ConstantArgumentSerializer.of(SeasonArgumentType::new)
 		);
