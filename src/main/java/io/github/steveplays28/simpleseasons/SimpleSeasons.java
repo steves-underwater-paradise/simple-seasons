@@ -4,11 +4,12 @@ import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.config.SimpleSeasonsConfig;
 import io.github.steveplays28.simpleseasons.server.command.CommandRegistry;
 import io.github.steveplays28.simpleseasons.server.api.world.registry.state.ServerWorldSeasonTrackerRegistry;
+import io.github.steveplays28.simpleseasons.server.state.SeasonStatePayload;
 import io.github.steveplays28.simpleseasons.server.state.world.ServerWorldSeasonTracker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ public class SimpleSeasons implements ModInitializer {
 	public static final String MOD_NAMESPACE = "simple_seasons";
 	public static final String MOD_NAME = "Simple Seasons";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
-	public static final Identifier SEASON_PACKET_CHANNEL = new Identifier(MOD_NAMESPACE);
 
 	@Override
 	public void onInitialize() {
@@ -27,6 +27,8 @@ public class SimpleSeasons implements ModInitializer {
 		if (!SimpleSeasonsConfig.HANDLER.load()) {
 			LOGGER.warn("{}' config failed to load, falling back to the default config.", MOD_NAME);
 		}
+
+		PayloadTypeRegistry.playS2C().register(SeasonStatePayload.PACKET_ID, SeasonStatePayload.PACKET_CODEC);
 		ServerLifecycleEvents.SERVER_STARTED.register(this::registerWorldSeasonTrackers);
 		CommandRegistry.registerCommands();
 	}

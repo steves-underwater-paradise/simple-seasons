@@ -9,5 +9,5 @@ import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_NAMESPACE;
 
 public class SimpleSeasonsBiomeTags {
 	public static final TagKey<Biome> HAS_WET_AND_DRY_SEASONS = TagKey.of(
-			RegistryKeys.BIOME, new Identifier(MOD_NAMESPACE, "has_wet_and_dry_seasons"));
+			RegistryKeys.BIOME, Identifier.of(MOD_NAMESPACE, "has_wet_and_dry_seasons"));
 }

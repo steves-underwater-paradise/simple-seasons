@@ -15,7 +15,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.color.world.FoliageColors;
+import net.minecraft.world.biome.FoliageColors;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -36,7 +36,7 @@ import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
 
 @Environment(EnvType.CLIENT)
 public class SimpleSeasonsResourceReloadListener implements SimpleResourceReloadListener<Pair<@NotNull List<BlockItemBiomeSeasonColors>, @NotNull List<BlockItemBiomeSeasonColors>>> {
-	private static final @NotNull Identifier IDENTIFIER = new Identifier(String.format(MOD_ID), "resource_reload_listener");
+	private static final @NotNull Identifier IDENTIFIER = Identifier.of(String.format(MOD_ID), "resource_reload_listener");
 	private static final @NotNull String JSON_FILE_SUFFIX = ".json";
 	private static final @NotNull String SEASON_COLORS_FOLDER_NAME = "season_colors";
 	private static final @NotNull String BLOCK_FOLDER_NAME = "block";
@@ -124,7 +124,7 @@ public class SimpleSeasonsResourceReloadListener implements SimpleResourceReload
 		@NotNull List<BlockItemBiomeSeasonColors> blockItemBiomeSeasonColorsList = new ArrayList<>();
 		for (@NotNull final var dataPackJsonFile : dataPackJsonFiles.entrySet()) {
 			@NotNull final var splitDataPackJsonFilePath = dataPackJsonFile.getKey().getPath().replace(".json", "").split("/");
-			@NotNull final var identifier = new Identifier(
+			@NotNull final var identifier = Identifier.of(
 					splitDataPackJsonFilePath[splitDataPackJsonFilePath.length - 2],
 					splitDataPackJsonFilePath[splitDataPackJsonFilePath.length - 1]
 			);
