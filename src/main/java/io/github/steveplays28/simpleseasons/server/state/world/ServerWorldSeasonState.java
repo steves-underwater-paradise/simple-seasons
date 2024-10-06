@@ -1,7 +1,6 @@
 package io.github.steveplays28.simpleseasons.server.state.world;
 
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
@@ -10,9 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import static io.github.steveplays28.simpleseasons.SimpleSeasons.MOD_ID;
 
 public class ServerWorldSeasonState extends PersistentState {
-	public static final Type<ServerWorldSeasonState> TYPE = new PersistentState.Type<>(
-			ServerWorldSeasonState::new, (nbt, lookup) -> createFromNbt(nbt), null
-	);
 	public static final String SEASON_KEY = "season";
 	public static final String SEASON_PROGRESS_KEY = "season_progress";
 
@@ -20,7 +16,7 @@ public class ServerWorldSeasonState extends PersistentState {
 	public float seasonProgress;
 
 	@Override
-	public NbtCompound writeNbt(@NotNull NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
+	public NbtCompound writeNbt(@NotNull NbtCompound nbt) {
 		nbt.putInt(SEASON_KEY, season);
 		nbt.putFloat(SEASON_PROGRESS_KEY, seasonProgress);
 		return nbt;
@@ -46,6 +42,6 @@ public class ServerWorldSeasonState extends PersistentState {
 	 * @return The season state that was fetched for the specified {@link ServerWorld} from its {@link PersistentStateManager}.
 	 */
 	public static @NotNull ServerWorldSeasonState getOrCreate(@NotNull PersistentStateManager persistentStateManager) {
-		return persistentStateManager.getOrCreate(TYPE, MOD_ID);
+		return persistentStateManager.getOrCreate(ServerWorldSeasonState::createFromNbt, ServerWorldSeasonState::new, MOD_ID);
 	}
 }

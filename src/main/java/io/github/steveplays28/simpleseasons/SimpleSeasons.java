@@ -5,10 +5,8 @@ import io.github.steveplays28.simpleseasons.config.SimpleSeasonsConfig;
 import io.github.steveplays28.simpleseasons.server.command.CommandRegistry;
 import io.github.steveplays28.simpleseasons.server.api.world.registry.state.ServerWorldSeasonTrackerRegistry;
 import io.github.steveplays28.simpleseasons.server.state.world.ServerWorldSeasonTracker;
-import io.github.steveplays28.simpleseasons.state.world.SeasonStatePayload;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -27,7 +25,6 @@ public class SimpleSeasons implements ModInitializer {
 		if (!SimpleSeasonsConfig.HANDLER.load()) {
 			LOGGER.warn("{}' config failed to load, falling back to the default config.", MOD_NAME);
 		}
-		PayloadTypeRegistry.playS2C().register(SeasonStatePayload.PACKET_ID, SeasonStatePayload.PACKET_CODEC);
 		ServerLifecycleEvents.SERVER_STARTED.register(this::registerWorldSeasonTrackers);
 		CommandRegistry.registerCommands();
 	}

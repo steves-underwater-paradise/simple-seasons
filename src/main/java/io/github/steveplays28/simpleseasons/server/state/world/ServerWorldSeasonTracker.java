@@ -4,7 +4,7 @@ import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.config.SimpleSeasonsConfig;
 import io.github.steveplays28.simpleseasons.server.util.time.TimeUtil;
-import io.github.steveplays28.simpleseasons.state.world.SeasonStatePayload;
+import io.github.steveplays28.simpleseasons.state.world.SeasonStatePacket;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -73,6 +73,6 @@ public class ServerWorldSeasonTracker extends SeasonTracker {
 	}
 
 	private void sendSeasonStatePacket(@NotNull ServerPlayerEntity player) {
-		ServerPlayNetworking.send(player, new SeasonStatePayload(serverWorldSeasonState.season, serverWorldSeasonState.seasonProgress));
+		ServerPlayNetworking.send(player, new SeasonStatePacket(serverWorldSeasonState.season, serverWorldSeasonState.seasonProgress));
 	}
 }
