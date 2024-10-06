@@ -22,15 +22,6 @@ public class ServerWorldSeasonState extends PersistentState {
 	public int season;
 	public float seasonProgress;
 
-	public ServerWorldSeasonState() {
-
-	}
-
-	public ServerWorldSeasonState(int season, float seasonProgress) {
-		this.season = season;
-		this.seasonProgress = seasonProgress;
-	}
-
 	@Override
 	public NbtCompound writeNbt(@NotNull NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
 		nbt.putInt(SEASON_KEY, season);

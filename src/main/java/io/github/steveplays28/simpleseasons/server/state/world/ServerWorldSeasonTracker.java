@@ -73,6 +73,6 @@ public class ServerWorldSeasonTracker extends SeasonTracker {
 	}
 
 	private void sendSeasonStatePacket(@NotNull ServerPlayerEntity player) {
-		ServerPlayNetworking.send(player, new SeasonStatePayload(serverWorldSeasonState));
+		ServerPlayNetworking.send(player, new SeasonStatePayload(serverWorldSeasonState.season, serverWorldSeasonState.seasonProgress));
 	}
 }

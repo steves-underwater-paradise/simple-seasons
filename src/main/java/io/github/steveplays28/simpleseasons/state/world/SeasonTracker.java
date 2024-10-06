@@ -66,7 +66,7 @@ public abstract class SeasonTracker {
 	public void setSeason(int seasonId) {
 		if (seasonId > SeasonTracker.Seasons.WINTER.ordinal() || seasonId < SeasonTracker.Seasons.SPRING.ordinal()) {
 			SimpleSeasons.LOGGER.error(
-					"Error occurred while setting the season: seasonId is out of bounds. The seasonId can only be between 0-3 (inclusive), given: {}.\n{}",
+					"Error occurred while setting the season: season is out of bounds. The season can only be between 0-3 (inclusive), given: {}.\n{}",
 					seasonId, new Exception().getStackTrace()
 			);
 			return;
