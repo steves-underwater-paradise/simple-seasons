@@ -3,13 +3,12 @@ package io.github.steveplays28.simpleseasons.server.state.world;
 import io.github.steveplays28.simpleseasons.SimpleSeasons;
 import io.github.steveplays28.simpleseasons.api.SimpleSeasonsApi;
 import io.github.steveplays28.simpleseasons.config.SimpleSeasonsConfig;
+import io.github.steveplays28.simpleseasons.server.state.SeasonStatePayload;
 import io.github.steveplays28.simpleseasons.server.util.time.TimeUtil;
 import io.github.steveplays28.simpleseasons.state.world.SeasonTracker;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -52,14 +51,6 @@ public class ServerWorldSeasonTracker extends SeasonTracker {
 		sendSeasonStatePacketToAllPlayers();
 	}
 
-	// TODO: Move into SeasonStatePacket class
-	private static @NotNull PacketByteBuf createSeasonStatePacket(@NotNull ServerWorldSeasonState serverWorldSeasonState) {
-		@NotNull var packet = PacketByteBufs.create();
-		packet.writeInt(serverWorldSeasonState.season);
-		packet.writeFloat(serverWorldSeasonState.seasonProgress);
-		return packet;
-	}
-
 	private void onEndServerWorldTick(@NotNull ServerWorld serverWorld) {
 		if (serverWorld != this.serverWorld) {
 			return;
@@ -82,6 +73,6 @@ public class ServerWorldSeasonTracker extends SeasonTracker {
 	}
 
 	private void sendSeasonStatePacket(@NotNull ServerPlayerEntity player) {
-		ServerPlayNetworking.send(player, SimpleSeasons.SEASON_PACKET_CHANNEL, createSeasonStatePacket(serverWorldSeasonState));
+		ServerPlayNetworking.send(player, new SeasonStatePayload(serverWorldSeasonState));
 	}
 }

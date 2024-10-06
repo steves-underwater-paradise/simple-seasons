@@ -60,11 +60,11 @@ public class BlockItemBiomeSeasonColors {
 				// Remove the biome tag prefix if it exists
 				// # is an illegal character in identifiers
 				if (identifier.startsWith("#")) {
-					identifierCached = new Identifier(identifier.substring(1));
+					identifierCached = Identifier.of(identifier.substring(1));
 					return identifierCached;
 				}
 
-				identifierCached = new Identifier(identifier);
+				identifierCached = Identifier.of(identifier);
 			}
 
 			return identifierCached;

@@ -18,7 +18,7 @@ public class SimpleSeasonsConfig {
 	public static final @NotNull String JSON_5_FILE_SUFFIX = ".json5";
 	public static final @NotNull ConfigClassHandler<SimpleSeasonsConfig> HANDLER = ConfigClassHandler.createBuilder(
 			SimpleSeasonsConfig.class).id(
-			new Identifier(MOD_ID, "config")).serializer(config -> GsonConfigSerializerBuilder.create(config).setPath(
+			Identifier.of(MOD_ID, "config")).serializer(config -> GsonConfigSerializerBuilder.create(config).setPath(
 			FabricLoader.getInstance().getConfigDir().resolve(String.format("%s/config%s", MOD_NAMESPACE, JSON_5_FILE_SUFFIX))).setJson5(
 			true).build()).build();
 

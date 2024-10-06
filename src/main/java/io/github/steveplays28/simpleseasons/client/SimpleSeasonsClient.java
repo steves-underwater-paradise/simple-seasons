@@ -24,7 +24,7 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		// Register a season model predicate provider
-		ModelPredicateProviderRegistry.register(new Identifier(MOD_ID, "season"), new SeasonClampedModelPredicateProvider());
+		ModelPredicateProviderRegistry.register(Identifier.of(MOD_ID, "season"), new SeasonClampedModelPredicateProvider());
 
 		var modContainer = FabricLoader.getInstance().getModContainer(MOD_ID);
 		if (modContainer.isEmpty()) {
@@ -36,7 +36,7 @@ public class SimpleSeasonsClient implements ClientModInitializer {
 
 		// Register a built-in default resource pack
 		ResourceManagerHelper.registerBuiltinResourcePack(
-				new Identifier(MOD_ID, "default"), modContainer.get(), ResourcePackActivationType.DEFAULT_ENABLED);
+				Identifier.of(MOD_ID, "default"), modContainer.get(), ResourcePackActivationType.DEFAULT_ENABLED);
 		// Register a resource reload listener
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSeasonsResourceReloadListener());
 	}
