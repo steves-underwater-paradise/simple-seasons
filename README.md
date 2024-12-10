@@ -7,25 +7,25 @@ Minecraft mod that adds a simple season system.
 ## Features
 
 - Per-block, per-biome season colors
-    - Resource pack-based
-    - Automatic registration of block/item colors defined in resource packs using Fabric API
-    - Hot reloading (reloading season colors while in a world)
+  - Resource pack-based
+  - Automatic registration of block/item colors defined in resource packs using Fabric API
+  - Hot reloading (reloading season colors while in a world)
 - Smooth transition between seasons
-    - Seasons gradually progress into the next season
-    - Season colors are updated every N seconds on all clients
+  - Seasons gradually progress into the next season
+  - Season colors are updated every N seconds on all clients
 - Dry and wet seasons
-    - Used in savannas (dry climate; `#c:climate_dry`) and jungles (wet climate; `#c:climate_wet`) by default
-    - Configurable per-biome by changing the biome tag `data/simple_seasons/tags/worldgen/biome/has_wet_and_dry_seasons.json`
+  - Used in savannas (dry climate; `#c:climate_dry`) and jungles (wet climate; `#c:climate_wet`) by default
+  - Configurable per-biome by changing the biome tag `data/simple_seasons/tags/worldgen/biome/has_wet_and_dry_seasons.json`
 - Per-world seasons
-    - Any world with unfixed time will have seasons
+  - Any world with unfixed time will have seasons
 - Ice and snow formation (during winter) and melting (during other seasons)
-    - Ice won't form on oceans
-    - Snow can pile up on ice (by default)
+  - Ice won't form on oceans
+  - Snow can pile up on ice (by default)
 - Default built-in resource pack
-    - Season colors for vanilla Minecraft blocks and items
+  - Season colors for vanilla Minecraft blocks and items
 - Config options (and a config GUI using YACL)
-    - Season progress update rate
-    - Season length multiplier
+  - Season progress update rate
+  - Season length multiplier
 
 ## Dependencies
 
@@ -74,6 +74,7 @@ Server-side and client-side.
 ## Attribution
 
 Thank you to:
+
 - [Andrew Grant](https://github.com/Andrew6rant) and [Bawnorton](https://github.com/Bawnorton): for their previous works
 related to season color transitions and Sodium compatible chunk rebuilding
 - [JorisDeBeer](https://github.com/JorisDeBeer) and [ix0rai](https://github.com/ix0rai): for their contributions to Simple Seasons
