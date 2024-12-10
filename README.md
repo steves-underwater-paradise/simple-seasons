@@ -38,7 +38,9 @@ Minecraft mod that adds a simple season system.
 
 ### Compatible mods
 
-- Sodium
+- [Sodium](https://modrinth.com/mod/sodium)
+- [Thermoo](https://modrinth.com/mod/thermoo)
+  - Requires [Thermoo Patches](https://modrinth.com/mod/thermoo-patches)
 
 ### Incompatibilities
 
