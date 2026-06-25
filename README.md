@@ -83,3 +83,5 @@ related to season color transitions and Sodium compatible chunk rebuilding
 ## License
 
 This project is licensed under LGPLv3, see [LICENSE](https://github.com/steves-underwater-paradise/simple-seasons/blob/1.20.x/LICENSE).
+
+Copyright (c) 2023-2026 Steveplays
